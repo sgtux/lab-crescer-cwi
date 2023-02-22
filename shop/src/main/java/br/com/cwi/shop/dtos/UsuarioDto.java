@@ -1,7 +1,5 @@
 package br.com.cwi.shop.dtos;
 
-import jakarta.persistence.Column;
-
 import java.util.Date;
 
 public class UsuarioDto {

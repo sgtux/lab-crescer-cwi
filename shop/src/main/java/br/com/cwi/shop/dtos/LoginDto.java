@@ -1,6 +1,6 @@
-package br.com.cwi.shop.models;
+package br.com.cwi.shop.dtos;
 
-public class LoginModel {
+public class LoginDto {
 
     private String username;
 
