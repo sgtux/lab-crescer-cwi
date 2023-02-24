@@ -58,3 +58,25 @@ export const ActionsContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
 `
+
+export const PostText = styled.textarea`
+    border: none;
+    resize: none;
+    width: 90%;
+    height: 80px;
+    font-size: 16px;
+    font-family: inherit;
+    padding: 10px;
+    border-radius: 6px;
+    &:focus {
+        border: 0;
+        outline: 0;
+        box-shadow: 0 0 9px 5px #ddd;
+    }
+`
+
+export const ErrorMessage = styled.div`
+    color: red;
+    align-text: center;
+    margin-top:10px;
+`

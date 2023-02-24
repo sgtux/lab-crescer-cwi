@@ -1,11 +1,17 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
+    display: flex;
+    flex-orientation: row;
+    justify-content: space-between;
     text-align: end;
     height: 60px;
     border-bottom: solid 1px #ccc;
     padding-top: 10px;
     padding-right: 20px;
+    padding-left: 20px;
+    background-color: white;
+    box-shadow: 0 0 5px gray;
 `
 
 export const BtnLogout = styled.button`
@@ -60,4 +66,19 @@ export const Line = styled.div`
     margin: 10px 0;
     border: 1px solid #dbdada;
 
+`
+
+export const SearchInput = styled.input`
+    background-color: #eee;
+    border: none;
+    border-radius: 20px;
+    height: 40px;
+    padding: 0 20px;
+    font-size: 16px;
+    margin-top: 4px;
+    transition: 200ms;
+    &:focus {
+        outline: 0;
+        box-shadow: 0 0 2px 2px #ccc;
+    }
 `

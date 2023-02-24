@@ -13,7 +13,7 @@ CREATE TABLE usuario (
 CREATE TABLE post (
     id SERIAL PRIMARY KEY,
     texto VARCHAR(2000) NOT NULL,
-    foto VARCHAR(200) NOT NULL,
+    foto VARCHAR(200),
     visibilidade CHAR(1),
     criado_em TIMESTAMP NOT NULL,
     atualizado_em TIMESTAMP,

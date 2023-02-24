@@ -1,6 +1,7 @@
 package br.com.cwi.shop.dtos;
 
 import br.com.cwi.shop.entities.Post;
+import br.com.cwi.shop.helpers.Constantes;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class PostDto {
     }
 
     public String getFoto() {
-        return foto;
+        return this.foto == null || foto.isEmpty() ? null : Constantes.getPrefixUploadPath() + this.foto;
     }
 
     public void setFoto(String foto) {

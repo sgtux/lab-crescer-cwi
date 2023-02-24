@@ -92,7 +92,6 @@ export function PostList() {
                                 </div>
                             </CommentBox>)
                         }
-
                         <NewCommentBox>
                             <input placeholder="Write a comment..." />
                             <BtnSendComment>SEND</BtnSendComment>
@@ -101,9 +100,9 @@ export function PostList() {
                 </PostCard>)
             }
             <PostListFooter>Terms · Privacy · Program Policies </PostListFooter>
-            <NewPostModal onSuccess={() => refresh()} onClose={() => setShowNewPost(false)} />
+            {showNewPost && <NewPostModal onSuccess={() => refresh()} onClose={() => setShowNewPost(false)} />}
             <NewPostButtonBox>
-                <NewPostButton>Novo Post</NewPostButton>
+                <NewPostButton onClick={() => setShowNewPost(true)}>Novo Post</NewPostButton>
             </NewPostButtonBox>
         </PostListContainer >
     )

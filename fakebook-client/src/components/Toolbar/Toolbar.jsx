@@ -3,13 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { userChanged } from '../../store/actions'
 import { accountService } from '../../services'
 
-import { BtnLogout, PostProfileImage, Container, MenuProfile, ContainerMenu, Line } from './styles'
+import { BtnLogout, PostProfileImage, Container, MenuProfile, ContainerMenu, Line, SearchInput } from './styles'
 
 export function Toolbar() {
 
     const user = useSelector(state => state.appState.user)
-
-    console.log(user)
 
     const dispatch = useDispatch()
 
@@ -20,6 +18,8 @@ export function Toolbar() {
 
     return (
         <Container>
+            <img src="favicon.ico" height={50} />
+            <SearchInput placeholder='Pesquisar posts...' />
             <ContainerMenu>
                 <PostProfileImage alt="" src={user.foto || '/images/profile-default.jpg'} />
                 <MenuProfile>

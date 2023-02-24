@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -41,5 +42,12 @@ public final class StringHelper {
 
         BigInteger hash = new BigInteger(1, md.digest(texto.getBytes()));
         return hash.toString(16);
+    }
+
+    public static String pathJoin(String... directories){
+        String path = "";
+        for(var dir : directories)
+            path = new File(path, dir).toString();
+        return path;
     }
 }

@@ -49,7 +49,7 @@ public class Post {
     }
 
     public String getFoto() {
-        return foto == null || foto.isEmpty() ? null : Constantes.getPrefixUploadPath() + this.foto;
+        return this.foto;
     }
 
     public void setFoto(String foto) {
