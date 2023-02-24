@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class BaseController {
 
     protected UsuarioLogadoDto obterUsuarioLogado(HttpServletRequest request){
-        var cookie = CookieHelper.getCookie(request, Constantes.AUTH_COOKIE_NAME);
+        var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
         if(cookie != null) {
             try {
                 var userJson = StringHelper.fromBase64(cookie);

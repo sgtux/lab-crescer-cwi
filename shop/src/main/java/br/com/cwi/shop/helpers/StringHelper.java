@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public final class StringHelper {
@@ -26,5 +29,17 @@ public final class StringHelper {
         ObjectMapper mapper = new ObjectMapper();
         JavaType type = mapper.getTypeFactory().constructType(valueType);
         return (T)mapper.readValue(jsonData, type);
+    }
+
+    public static String md5(String texto) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");;
+        } catch(NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        BigInteger hash = new BigInteger(1, md.digest(texto.getBytes()));
+        return hash.toString(16);
     }
 }

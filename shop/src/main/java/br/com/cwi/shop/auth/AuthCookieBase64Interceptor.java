@@ -15,7 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class AuthCookieBase64Interceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        var cookie = CookieHelper.getCookie(request, Constantes.AUTH_COOKIE_NAME);
+        var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
         if(cookie != null) {
             try {
                 var userJson = StringHelper.fromBase64(cookie);

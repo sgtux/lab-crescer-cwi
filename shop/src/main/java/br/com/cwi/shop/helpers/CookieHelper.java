@@ -12,7 +12,7 @@ public final class CookieHelper {
         response.addCookie(cookie);
     }
 
-    public static String getCookie(HttpServletRequest request, String chave){
+    public static Cookie getCookie(HttpServletRequest request, String chave){
 
         var cookies = request.getCookies();
 
@@ -21,8 +21,18 @@ public final class CookieHelper {
 
         for (var c : cookies) {
             if(c.getName().equals(chave))
-                return c.getValue();
+                return c;
         }
         return null;
+    }
+
+    public static String getCookieValue(HttpServletRequest request, String chave) {
+        var cookie = getCookie(request, chave);
+        return cookie == null ? null : cookie.getValue();
+    }
+
+    public static void removeCookie(HttpServletRequest request, String chave) {
+        var cookie = getCookie(request, chave);
+        cookie.setMaxAge(0);
     }
 }

@@ -7,23 +7,17 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Usuario {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
-    private String nome;
+    private String texto;
 
-    private String sobrenome;
-
-    private String email;
-
-    private String senha;
+    private String visibilidade;
 
     private String foto;
-
-    private int funcao;
 
     @Column(name="criado_em")
     private Date criadoEm;
@@ -31,52 +25,27 @@ public class Usuario {
     @Column(name="atualizado_em")
     private Date atualizadoEm;
 
-    @OneToMany
-    @JoinColumn(name = "usuario_id")
-    private List<Post> posts;
+    @ManyToOne
+    private Usuario usuario;
 
     @OneToMany
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "post_id")
     private List<Comentario> comentarios;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getTexto() {
+        return texto;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setTexto(String texto) {
+        this.texto = texto;
     }
 
     public String getFoto() {
@@ -87,12 +56,12 @@ public class Usuario {
         this.foto = foto;
     }
 
-    public int getFuncao() {
-        return funcao;
+    public String getVisibilidade() {
+        return visibilidade;
     }
 
-    public void setFuncao(int funcao) {
-        this.funcao = funcao;
+    public void setVisibilidade(String visibilidade) {
+        this.visibilidade = visibilidade;
     }
 
     public Date getCriadoEm() {
@@ -111,14 +80,6 @@ public class Usuario {
         this.atualizadoEm = atualizadoEm;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
     public List<Comentario> getComentarios() {
         return comentarios;
     }
@@ -126,4 +87,13 @@ public class Usuario {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
 }

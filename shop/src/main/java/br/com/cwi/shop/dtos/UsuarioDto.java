@@ -1,22 +1,39 @@
 package br.com.cwi.shop.dtos;
 
+import br.com.cwi.shop.entities.Usuario;
+
 import java.util.Date;
 
 public class UsuarioDto {
 
     private Long id;
 
-    private String username;
+    private String nome;
+
+    private String sobrenome;
 
     private String email;
+
+    private String foto;
 
     private String senha;
 
     private Date criadoEm;
 
-    private String token;
+    private Date atualizadoEm;
 
-    private Date tokenExpiraEm;
+    public UsuarioDto(){}
+
+    public UsuarioDto(Usuario usuario){
+        id = usuario.getId();
+        nome = usuario.getNome();
+        sobrenome = usuario.getSobrenome();
+        email = usuario.getEmail();
+        foto = usuario.getFoto();
+        senha = usuario.getSenha();
+        criadoEm = usuario.getCriadoEm();
+        atualizadoEm = usuario.getAtualizadoEm();
+    }
 
     public Long getId() {
         return id;
@@ -26,12 +43,24 @@ public class UsuarioDto {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNome() {
+        return nome;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
+
+    public String getNomeCompleto() {
+        return nome + " " + sobrenome;
     }
 
     public String getEmail() {
@@ -58,19 +87,19 @@ public class UsuarioDto {
         this.criadoEm = criadoEm;
     }
 
-    public String getToken() {
-        return token;
+    public Date getAtualizadoEm() {
+        return atualizadoEm;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAtualizadoEm(Date atualizadoEm) {
+        this.atualizadoEm = atualizadoEm;
     }
 
-    public Date getTokenExpiraEm() {
-        return tokenExpiraEm;
+    public String getFoto() {
+        return foto;
     }
 
-    public void setTokenExpiraEm(Date tokenExpiraEm) {
-        this.tokenExpiraEm = tokenExpiraEm;
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }

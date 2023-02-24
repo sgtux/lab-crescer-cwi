@@ -1,6 +1,6 @@
 package br.com.cwi.shop.controllers;
 
-import br.com.cwi.shop.dtos.LoginDto;
+import br.com.cwi.shop.dtos.UsuarioDto;
 import br.com.cwi.shop.dtos.UsuarioLogadoDto;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.StringHelper;
@@ -29,24 +29,30 @@ public class UsuarioController extends BaseController {
     }
 
     @PostMapping("token")
-    public ResponseEntity<?> token(@RequestBody LoginDto loginModel, HttpServletResponse response) {
+    public ResponseEntity<?> token(@RequestBody UsuarioDto usuarioDto, HttpServletResponse response) {
 
-        var usuario = usuarioRepository.login(loginModel);
+        var usuario = usuarioRepository.login(usuarioDto);
 
         if(usuario != null) {
 
-            var usuarioLogadoDto = new UsuarioLogadoDto();
-            BeanUtils.copyProperties(usuario, usuarioLogadoDto);
+            var usuarioLogadoDto = new UsuarioLogadoDto(usuario);
 
             try {
                 String jsonData = StringHelper.toJson(usuarioLogadoDto);
                 String cookieValue = StringHelper.toBase64(jsonData);
-                CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue, 30);
+                CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue, 60 * 60);
                 return new ResponseEntity(usuarioLogadoDto, HttpStatus.OK);
-            }catch (JsonProcessingException ex) {
+            }catch (Exception ex) {
                 System.out.println(ex);
+                return new ResponseEntity("Erro Desconhecido", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
         return new ResponseEntity("Não Autorizado", HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("logout")
+    public ResponseEntity logout(HttpServletResponse response) {
+        CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, "", 0);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
