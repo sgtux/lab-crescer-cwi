@@ -6,10 +6,8 @@ import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.UsuarioRepository;
 import br.com.cwi.shop.helpers.CookieHelper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +21,37 @@ public class UsuarioController extends BaseController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping("usuario")
-    public ResponseEntity<?> obterDadosUsuarioLogado(HttpServletRequest request) {
+    public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
         var usuarioLogado = obterUsuarioLogado(request);
         return new ResponseEntity(usuarioLogado, HttpStatus.OK);
+    }
+
+    @PostMapping("criarConta")
+    public ResponseEntity criarConta(@RequestBody UsuarioDto usuarioDto) {
+
+        if (!StringHelper.isEmail(usuarioDto.getEmail())) {
+            return badRequest("Email inválido.");
+        }
+
+        if(StringHelper.isNullOrEmpty( usuarioDto.getNome())) {
+            return badRequest("Nome inválido.");
+        }
+
+        if(StringHelper.isNullOrEmpty( usuarioDto.getSobrenome())) {
+            return badRequest("Sobrenome inválido.");
+        }
+
+        if(usuarioRepository.buscarPorEmail(usuarioDto.getEmail()) != null) {
+            return badRequest("Email já cadastrado.");
+        }
+
+        try {
+            usuarioRepository.adicionar(usuarioDto);
+        } catch (Exception ex) {
+            return new ResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("token")

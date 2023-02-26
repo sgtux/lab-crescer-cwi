@@ -32,6 +32,10 @@ public class Post {
     @JoinColumn(name = "post_id")
     private List<Comentario> comentarios;
 
+    public Post() { }
+
+    public Post(long id) { this.id = id; }
+
     public long getId() {
         return id;
     }

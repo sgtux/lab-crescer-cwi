@@ -23,8 +23,17 @@ public class PostRepository {
     @Autowired
     ComentarioRepository comentarioRepository;
 
+    public Post buscarPorId(long id) {
+        var sqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios where p.id = :id";
+        var list = entityManager.createQuery(sqlString, Post.class)
+                .setParameter("id", id)
+                .getResultList();
+
+        return list.isEmpty() ? null : list.get(0);
+    }
+
     public List<Post> buscar(String filtro) {
-        var sqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios where p.texto like '%" + filtro + "%' order by p.criadoEm desc";
+        var sqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like '%" + filtro + "%' order by p.criadoEm desc, c.criadoEm asc";
         return entityManager.createQuery(sqlString, Post.class).getResultList();
     }
 

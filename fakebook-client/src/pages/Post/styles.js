@@ -84,14 +84,6 @@ export const CommentBox = styled.div`
         border-radius: 15px;
     }
 `
-    
-export const BtnRemoveComment = styled.em`
-    color: red;
-    margin-left:10px;
-    &:hover {
-        cursor: pointer;
-    }
-`
   
 export const NewCommentBox = styled.div`
     margin-top: 10px;
@@ -103,6 +95,11 @@ export const NewCommentBox = styled.div`
         width: 85%;
         background-color: #ddd;
         border: none;
+        &:focus {
+            border: none;
+            outline: none;
+            box-shadow: 2px 2px 2px 1px #ccc;
+        }
     }
 `
  
@@ -113,6 +110,7 @@ export const BtnSendComment = styled.button`
     font-weight: bold;
     &:hover {
         opacity: .8;
+        cursor: pointer;
     }
 `
 
@@ -133,6 +131,11 @@ export const BtnRemove = styled.button`
         cursor: pointer;
         opacity: .8;
     }
+`
+    
+export const BtnRemoveComment = styled(BtnRemove)`
+    font-size: 14px;
+    margin-left:10px;
 `
 
 export const Line = styled.div`

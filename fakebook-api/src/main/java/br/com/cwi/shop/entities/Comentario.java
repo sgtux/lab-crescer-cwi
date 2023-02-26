@@ -8,6 +8,8 @@ import java.util.Date;
 public class Comentario {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "comentario")
+    @SequenceGenerator(name = "comentario", sequenceName = "comentario_id_seq", allocationSize = 1)
     private long id;
 
     private String texto;
@@ -20,6 +22,10 @@ public class Comentario {
 
     @ManyToOne
     private Usuario usuario;
+
+    public Comentario(){}
+
+    public Comentario(long id) { this.id = id; }
 
     public long getId() {
         return id;

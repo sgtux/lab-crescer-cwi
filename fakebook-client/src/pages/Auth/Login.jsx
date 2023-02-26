@@ -18,13 +18,15 @@ export function Login({ onChangeMode }) {
 
     useEffect(() => setErrorMessage(''), [email, password])
 
-    async function login() {
+    async function login(e) {
+        if (e) {
+            e.preventDefault()
+        }
         try {
             const result = await accountService.login(email, password)
             const { token } = result
             storageService.setToken(token)
             const data = await accountService.getUserData()
-            console.log(data)
             dispatch(userChanged(data))
         } catch (err) {
             if (typeof (err.toJSON) === 'function' && err.toJSON().status === 401)
@@ -36,10 +38,12 @@ export function Login({ onChangeMode }) {
 
     return (
         <FormContainer>
-            <TextInput placeholder='Email' value={email} onChange={e => setEmail(e.target.value)} />
-            <TextInput placeholder='Senha' type="password" value={password} onChange={e => setPassword(e.target.value)} />
-            <Button onClick={() => login()}>Entrar</Button>
-            <ErrorMessage>{errorMessage}</ErrorMessage>
+            <form onSubmit={e => login(e)}>
+                <TextInput placeholder='Email' value={email} onChange={e => setEmail(e.target.value)} />
+                <TextInput placeholder='Senha' type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                <Button type='submit' onClick={() => login()}>Entrar</Button>
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+            </form>
             <Line />
             <ChangeScreenButton onClick={() => onChangeMode()}>Criar Conta</ChangeScreenButton>
         </FormContainer>

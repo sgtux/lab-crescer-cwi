@@ -21,6 +21,8 @@ public class ComentarioDto {
 
     private boolean owner;
 
+    public ComentarioDto () { }
+
     public ComentarioDto (Comentario comentario){
         id = comentario.getId();
         texto = comentario.getTexto();

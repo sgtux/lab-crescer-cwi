@@ -14,6 +14,7 @@ public class AuthInterceptorAppConfig implements WebMvcConfigurer {
                         "/index.html",
                         "/",
                         "/token",
+                        "/criarConta",
                         "/js/**",
                         "/favico.ico",
                         "/css/**"

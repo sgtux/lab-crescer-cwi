@@ -12,10 +12,13 @@ const getUserData = () => {
 
 const login = (email, senha) => axios.post('/token', { email, senha }).then(p => p.data)
 
+const create = user => axios.post('/criarConta', user)
+
 const logout = () => axios.get('/logout')
 
 export const accountService = {
     login,
     getUserData,
-    logout
+    logout,
+    create
 }

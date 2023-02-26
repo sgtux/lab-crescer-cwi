@@ -39,6 +39,10 @@ public class Usuario {
     @JoinColumn(name = "usuario_id")
     private List<Comentario> comentarios;
 
+    public Usuario() { }
+
+    public Usuario(long id) { this.id = id; }
+
     public Long getId() {
         return id;
     }

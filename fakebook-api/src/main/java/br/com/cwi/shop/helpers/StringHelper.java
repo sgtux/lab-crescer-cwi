@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.regex.Pattern;
 
 public final class StringHelper {
 
@@ -49,5 +50,13 @@ public final class StringHelper {
         for(var dir : directories)
             path = new File(path, dir).toString();
         return path;
+    }
+
+    public static boolean isEmail(String email) {
+        return Pattern.compile("^(.+)@(\\S+)$").matcher(email).matches();
+    }
+
+    public static boolean isNullOrEmpty(String value) {
+        return value == null || value.isEmpty();
     }
 }
