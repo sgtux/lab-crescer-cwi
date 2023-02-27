@@ -1,9 +1,11 @@
 package br.com.cwi.shop.controllers;
 
 import br.com.cwi.shop.dtos.UsuarioDto;
+import br.com.cwi.shop.dtos.UsuarioExibicaoDto;
 import br.com.cwi.shop.dtos.UsuarioLogadoDto;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.StringHelper;
+import br.com.cwi.shop.repository.PostRepository;
 import br.com.cwi.shop.repository.UsuarioRepository;
 import br.com.cwi.shop.helpers.CookieHelper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RestController
 public class UsuarioController extends BaseController {
@@ -20,10 +25,28 @@ public class UsuarioController extends BaseController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
     @GetMapping("usuario")
     public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
         var usuarioLogado = obterUsuarioLogado(request);
         return new ResponseEntity(usuarioLogado, HttpStatus.OK);
+    }
+
+    @GetMapping("usuarios")
+    public ResponseEntity<List<UsuarioExibicaoDto>> obterUsuarios(@RequestParam String filtro) {
+
+        List<UsuarioExibicaoDto> list = new ArrayList<>();
+
+        for (var item : usuarioRepository.buscar(filtro)) {
+            var dto = new UsuarioExibicaoDto(item);
+            var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
+            dto.setQuantidadePosts(quantidatePostsUsuario);
+            list.add(dto);
+        }
+
+        return new ResponseEntity(list, HttpStatus.OK);
     }
 
     @PostMapping("criarConta")
@@ -54,8 +77,8 @@ public class UsuarioController extends BaseController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("token")
-    public ResponseEntity<?> token(@RequestBody UsuarioDto usuarioDto, HttpServletResponse response) {
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody UsuarioDto usuarioDto, HttpServletResponse response) {
 
         var usuario = usuarioRepository.login(usuarioDto);
 

@@ -1,21 +1,4 @@
-import { FilterStates } from './constants'
-
-export { StorageKeys, FilterStates } from './constants'
-
-export const getFilterStateTranslated = filter => {
-    switch (filter) {
-        case FilterStates.INBOX:
-            return 'Entrada'
-        case FilterStates.IMPORTANT:
-            return 'Importante'
-        case FilterStates.SENT:
-            return 'Enviado'
-        case FilterStates.TRASH:
-            return 'Lixo'
-        default:
-            return ''
-    }
-}
+export { StorageKeys, MenuStates } from './constants'
 
 export const toDateString = input => {
     if (!input)

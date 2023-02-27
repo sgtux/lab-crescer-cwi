@@ -1,9 +1,9 @@
 package br.com.cwi.shop.repository;
 
 import br.com.cwi.shop.entities.Post;
-import br.com.cwi.shop.entities.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,17 +24,24 @@ public class PostRepository {
     ComentarioRepository comentarioRepository;
 
     public Post buscarPorId(long id) {
-        var sqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios where p.id = :id";
-        var list = entityManager.createQuery(sqlString, Post.class)
+        var jpqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios where p.id = :id";
+        var list = entityManager.createQuery(jpqlString, Post.class)
                 .setParameter("id", id)
                 .getResultList();
 
         return list.isEmpty() ? null : list.get(0);
     }
 
+    public long quantidadePostPorUsuario(long userId) {
+        var sqlString = "SELECT count(*) FROM Post where usuario_id = :userId";
+        Query query = entityManager.createNativeQuery(sqlString, Long.class)
+                .setParameter("userId", userId);
+        return ((Number)query.getSingleResult()).longValue();
+    }
+
     public List<Post> buscar(String filtro) {
-        var sqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like '%" + filtro + "%' order by p.criadoEm desc, c.criadoEm asc";
-        return entityManager.createQuery(sqlString, Post.class).getResultList();
+        var jpqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like '%" + filtro + "%' order by p.criadoEm desc, c.criadoEm asc";
+        return entityManager.createQuery(jpqlString, Post.class).getResultList();
     }
 
     @Transactional

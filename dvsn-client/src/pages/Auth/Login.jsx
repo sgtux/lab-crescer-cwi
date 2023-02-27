@@ -5,7 +5,7 @@ import { FormContainer, TextInput, Button, ChangeScreenButton, ErrorMessage, Lin
 
 import { userChanged } from '../../store/actions'
 
-import { accountService, storageService } from '../../services'
+import { usuarioService, storageService } from '../../services'
 
 export function Login({ onChangeMode }) {
 
@@ -23,10 +23,10 @@ export function Login({ onChangeMode }) {
             e.preventDefault()
         }
         try {
-            const result = await accountService.login(email, password)
+            const result = await usuarioService.login(email, password)
             const { token } = result
             storageService.setToken(token)
-            const data = await accountService.getUserData()
+            const data = await usuarioService.getUserData()
             dispatch(userChanged(data))
         } catch (err) {
             if (typeof (err.toJSON) === 'function' && err.toJSON().status === 401)

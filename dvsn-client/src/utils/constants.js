@@ -3,9 +3,7 @@ export const StorageKeys = {
     TOKEN: '@WEB_MAIL_TOKEN',
 }
 
-export const FilterStates = {
-    INBOX: 'INBOX',
-    IMPORTANT: 'important',
-    SENT: 'sent',
-    TRASH: 'trash'
+export const MenuStates = {
+    POSTS: 'POSTS',
+    USUARIOS: 'USUARIOS'
 }

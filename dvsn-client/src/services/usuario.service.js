@@ -6,19 +6,20 @@ import axios from 'axios'
 //     return axios.get('/usuario', { headers: { authorization: `bearer ${storageService.getToken()}` } }).then(p => p.data)
 // }
 
-const getUserData = () => {
-    return axios.get('/usuario').then(p => p.data)
-}
+const getUserData = () => axios.get('/usuario').then(p => p.data)
 
-const login = (email, senha) => axios.post('/token', { email, senha }).then(p => p.data)
+const buscar = filtro => axios.get(`/usuarios?filtro=${filtro || ''}`).then(p => p.data)
+
+const login = (email, senha) => axios.post('/login', { email, senha }).then(p => p.data)
 
 const create = user => axios.post('/criarConta', user)
 
 const logout = () => axios.get('/logout')
 
-export const accountService = {
-    login,
+export const usuarioService = {
     getUserData,
+    buscar,
+    login,
     logout,
     create
 }

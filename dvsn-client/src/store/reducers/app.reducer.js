@@ -1,9 +1,9 @@
-import { StorageKeys, FilterStates } from '../../utils'
+import { StorageKeys, MenuStates } from '../../utils'
 import { ActionTypes } from '../actions'
 
 const initialState = {
     user: JSON.parse(localStorage.getItem(StorageKeys.USER)),
-    filter: FilterStates.INBOX
+    menu: MenuStates.USUARIOS
 }
 
 export const appReducer = (state = initialState, action) => {
@@ -14,8 +14,8 @@ export const appReducer = (state = initialState, action) => {
             else
                 localStorage.removeItem(StorageKeys.USER)
             return { ...state, user: action.payload }
-        case ActionTypes.EMAIL_FILTER_CHANGED:
-            return { ...state, filter: action.payload }
+        case ActionTypes.MENU_CHANGED:
+            return { ...state, menu: action.payload }
         default:
             return state
     }

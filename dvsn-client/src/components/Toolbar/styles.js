@@ -82,3 +82,19 @@ export const SearchInput = styled.input`
         box-shadow: 0 0 2px 2px #ccc;
     }
 `
+
+export const ActionBox = styled.div`
+    padding-top:10px;
+`
+
+export const BtnMenu = styled.button`
+    margin-right: 10px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    text-transform: uppercase;
+    color: ${({selected}) => selected ? '#aaa' : '#555' };
+    &:hover {
+        cursor: pointer;
+    }
+`

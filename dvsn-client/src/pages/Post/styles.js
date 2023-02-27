@@ -1,18 +1,7 @@
 import styled from 'styled-components'
-import { grey } from '@mui/material/colors'
 
 export const PostListContainer = styled.div`
-    margin-left: 220px;
-    margin-right: 20px;
     margin-top: 20px;
-`
-
-export const PostListFooter = styled.div`
-    text-align: center;
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
-    padding: 20px;
-    font-size: 12px;
-    color: ${grey[400]};
 `
 
 export const PostCard = styled.div`

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { FormContainer, TextInput, Button, Line, ChangeScreenButton, ErrorMessage } from './styles'
 
-import { accountService } from '../../services'
+import { usuarioService } from '../../services'
 
 export function Create({ onChangeMode }) {
 
@@ -18,7 +18,7 @@ export function Create({ onChangeMode }) {
     async function create() {
 
         try {
-            await accountService.create({ nome, sobrenome, email, senha })
+            await usuarioService.create({ nome, sobrenome, email, senha })
             onChangeMode()
         } catch (err) {
             if (typeof (err.toJSON) === 'function' && err.toJSON().status === 400) {

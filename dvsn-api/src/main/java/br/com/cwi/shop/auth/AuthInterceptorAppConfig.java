@@ -13,7 +13,8 @@ public class AuthInterceptorAppConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/index.html",
                         "/",
-                        "/token",
+                        "/login",
+                        "/logout",
                         "/criarConta",
                         "/js/**",
                         "/favico.ico",

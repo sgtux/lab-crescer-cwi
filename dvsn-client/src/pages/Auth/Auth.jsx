@@ -5,7 +5,7 @@ import { Container, Title } from './styles'
 
 import { userChanged } from '../../store/actions'
 
-import { accountService } from '../../services'
+import { usuarioService } from '../../services'
 
 import { Login } from './Login'
 import { Create } from './Create'
@@ -18,8 +18,7 @@ export function Auth() {
 
     useEffect(async () => {
         try {
-            const data = await accountService.getUserData()
-            console.log(data)
+            const data = await usuarioService.getUserData()
             dispatch(userChanged(data))
         } catch (e) { }
     }, [])

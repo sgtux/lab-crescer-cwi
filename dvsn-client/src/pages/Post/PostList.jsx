@@ -3,9 +3,10 @@ import { useDispatch } from 'react-redux'
 import { userChanged } from '../../store/actions'
 
 import { postService } from '../../services'
+import { Footer } from '../../components'
+
 import {
     PostListContainer,
-    PostListFooter,
     PostCard,
     PostCardHeader,
     PostUserBox,
@@ -41,17 +42,11 @@ export function PostList() {
     function atualizar() {
         setShowNewPost(false)
         postService.obterTodos(filter)
-            .then(res => {
-                setPosts(res)
-                // const keyPair = {}
-                // for (let post of res)
-                //     keyPair[post.id] = ''
-                // setComentarios(keyPair)
-            })
+            .then(res => setPosts(res))
             .catch(err => {
                 if ((err.response || {}).status === 401)
                     dispatch(userChanged(null))
-                console.log(err.response)
+                console.log(err)
             })
     }
 
@@ -129,11 +124,11 @@ export function PostList() {
                     </PostFooter>
                 </PostCard>)
             }
-            <PostListFooter>Terms · Privacy · Program Policies </PostListFooter>
             {showNewPost && <NewPostModal onSuccess={() => atualizar()} onClose={() => setShowNewPost(false)} />}
             <NewPostButtonBox>
                 <NewPostButton onClick={() => setShowNewPost(true)}>Novo Post</NewPostButton>
             </NewPostButtonBox>
+            <Footer>Mantenha a segurança simples</Footer>
         </PostListContainer >
     )
 }

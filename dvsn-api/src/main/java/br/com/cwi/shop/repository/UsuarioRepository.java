@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class UsuarioRepository {
@@ -23,6 +24,12 @@ public class UsuarioRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
+    public List<Usuario> buscar(String filtro) {
+        var sqlString = "select * from usuario u where nome like '%" + filtro + "%'";
+        var query = entityManager.createNativeQuery(sqlString, Usuario.class);
+        return query.getResultList();
+    }
+
     public Usuario buscarPorEmail(String email) {
         var query = entityManager.createQuery("select u from Usuario u where u.email = :email", Usuario.class);
         query.setParameter("email", email);
@@ -31,8 +38,8 @@ public class UsuarioRepository {
     }
 
     public Usuario login(UsuarioDto usuario) {
-        var query = String.format("select u from Usuario u where u.email = '%s' and u.senha = '%s'", usuario.getEmail(), StringHelper.md5(usuario.getSenha()));
-        var list = entityManager.createQuery(query, Usuario.class).getResultList();
+        var jpqlquery = String.format("select u from Usuario u where u.email = '%s' and u.senha = '%s'", usuario.getEmail(), StringHelper.md5(usuario.getSenha()));
+        var list = entityManager.createQuery(jpqlquery, Usuario.class).getResultList();
         if(list.isEmpty())
             return null;
         else
