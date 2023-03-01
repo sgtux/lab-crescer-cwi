@@ -1,7 +1,7 @@
 package br.com.cwi.shop.helpers;
 
 public class Constantes {
-    public static final String AUTH_COOKIE_NAME = "fakebook_cookie";
+    public static final String AUTH_COOKIE_NAME = "dvsm_cookie";
 
     private static final String PREFIX_UPLOAD_PATH = "http://localhost:8080/upload/";
 

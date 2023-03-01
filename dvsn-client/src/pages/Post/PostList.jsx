@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { userChanged } from '../../store/actions'
 
 import { postService } from '../../services'
-import { Footer } from '../../components'
+import { Footer, SearchBtn, SearchInput } from '../../components'
 
 import {
     PostListContainer,
@@ -30,19 +30,24 @@ export function PostList() {
 
     const [posts, setPosts] = useState([])
     const [showNewPost, setShowNewPost] = useState(false)
-    const [filter, setFilter] = useState('')
+    const [filtro, setFiltro] = useState('')
+    const [filtroResult, setFiltroResult] = useState('')
     const [comentarios, setComentarios] = useState({})
 
     const dispatch = useDispatch()
 
     useEffect(() => {
         atualizar()
-    }, [filter])
+        setFiltroResult('')
+    }, [])
 
     function atualizar() {
         setShowNewPost(false)
-        postService.obterTodos(filter)
-            .then(res => setPosts(res))
+        postService.obterTodos(filtro)
+            .then(res => {
+                setPosts(res)
+                setFiltroResult(filtro)
+            })
             .catch(err => {
                 if ((err.response || {}).status === 401)
                     dispatch(userChanged(null))
@@ -69,7 +74,10 @@ export function PostList() {
 
     return (
         <PostListContainer>
-            {posts.length && posts.map(p =>
+            <SearchInput onChange={e => setFiltro(e.target.value)} placeholder='Conteúdo ...' />
+            <SearchBtn onClick={() => atualizar()}>Buscar</SearchBtn>
+            {!!filtroResult && <div>Resultado para: <span dangerouslySetInnerHTML={{ __html: filtroResult }} /></div>}
+            {!!posts.length && posts.map(p =>
                 <PostCard key={p.id}>
                     <PostCardHeader>
                         <PostUserBox>

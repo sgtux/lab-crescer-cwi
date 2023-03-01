@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { UserBox, Container, UserImage, SearchInput, SearchBtn } from './styles'
+import { UserBox, Container, UserImage } from './styles'
 import { usuarioService } from '../../services'
 import { userChanged } from '../../store/actions'
-import { Footer } from '../../components'
+import { Footer, SearchBtn, SearchInput } from '../../components'
 
 export function UserList() {
 

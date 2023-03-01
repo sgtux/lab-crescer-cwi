@@ -40,8 +40,10 @@ public class PostRepository {
     }
 
     public List<Post> buscar(String filtro) {
-        var jpqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like '%" + filtro + "%' order by p.criadoEm desc, c.criadoEm asc";
-        return entityManager.createQuery(jpqlString, Post.class).getResultList();
+        var jpqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like CONCAT('%', :filtro,'%') order by p.criadoEm desc, c.criadoEm asc";
+        return entityManager.createQuery(jpqlString, Post.class)
+                .setParameter("filtro", filtro)
+                .getResultList();
     }
 
     @Transactional
