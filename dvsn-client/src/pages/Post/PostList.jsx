@@ -110,7 +110,7 @@ export function PostList() {
                                             </BtnRemoveComment>
                                         }
                                     </div>
-                                    <span>{x.texto}</span>
+                                    <div dangerouslySetInnerHTML={{ __html: x.texto }} />
                                 </div>
                             </CommentBox>)
                         }
@@ -128,7 +128,7 @@ export function PostList() {
             <NewPostButtonBox>
                 <NewPostButton onClick={() => setShowNewPost(true)}>Novo Post</NewPostButton>
             </NewPostButtonBox>
-            <Footer>Mantenha a segurança simples</Footer>
+            <Footer />
         </PostListContainer >
     )
 }

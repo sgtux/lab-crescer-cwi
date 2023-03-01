@@ -8,11 +8,11 @@ import { userChanged } from '../../store/actions'
 import { usuarioService, storageService } from '../../services'
 
 export function Login({ onChangeMode }) {
-
-
+ 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -22,13 +22,21 @@ export function Login({ onChangeMode }) {
         if (e) {
             e.preventDefault()
         }
+
+        if (loading)
+            return
+
+        setLoading(true)
+        
         try {
             const result = await usuarioService.login(email, password)
             const { token } = result
             storageService.setToken(token)
             const data = await usuarioService.getUserData()
+            setLoading(false)
             dispatch(userChanged(data))
         } catch (err) {
+            setLoading(false)
             if (typeof (err.toJSON) === 'function' && err.toJSON().status === 401)
                 setErrorMessage('Email ou senha inválido.')
             else

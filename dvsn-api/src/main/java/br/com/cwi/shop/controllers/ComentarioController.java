@@ -55,7 +55,7 @@ public class ComentarioController extends BaseController {
     }
 
     @DeleteMapping("comentario/{id}")
-    public ResponseEntity removerComentario(@RequestParam long id) {
+    public ResponseEntity removerComentario(@PathVariable long id) {
 
         if(!comentarioRepository.existsById(id))
             return badRequest("Comentário não encontrado.");

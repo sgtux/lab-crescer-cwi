@@ -1,16 +1,16 @@
 import { StorageKeys } from '../utils'
 
-const setUser = user => localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
+const setCurrentMenu = menu => localStorage.setItem(StorageKeys.CURRENT_MENU, menu)
 
-const getUser = () => JSON.parse(localStorage.getItem(StorageKeys.USER))
+const getCurrentMenu = () => localStorage.getItem(StorageKeys.CURRENT_MENU)
 
 const setToken = token => localStorage.setItem(StorageKeys.TOKEN, token)
 
 const getToken = () => localStorage.getItem(StorageKeys.TOKEN)
 
 export const storageService = {
-    setUser,
-    getUser,
+    setCurrentMenu,
+    getCurrentMenu,
     setToken,
     getToken
 }

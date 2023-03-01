@@ -1,4 +1,4 @@
-export { StorageKeys, MenuStates } from './constants'
+export { MenuStates, StorageKeys } from './constants'
 
 export const toDateString = input => {
     if (!input)
@@ -7,7 +7,7 @@ export const toDateString = input => {
     let day = date.getDate()
     day = day > 9 ? day : `0${day}`
     let month = date.getMonth() + 1
-    month = month > 9 ? month : `0${month}`    
+    month = month > 9 ? month : `0${month}`
     return `${day}/${month}/${date.getFullYear()}`
 }
 
