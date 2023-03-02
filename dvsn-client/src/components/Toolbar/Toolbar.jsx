@@ -4,7 +4,7 @@ import { userChanged, menuChanged } from '../../store/actions'
 import { usuarioService } from '../../services'
 import { MenuStates } from '../../utils'
 
-import { BtnLogout, PostProfileImage, Container, MenuProfile, ContainerMenu, Line, SearchInput, ActionBox, BtnMenu } from './styles'
+import { BtnLogout, PostProfileImage, Container, MenuProfile, ContainerMenu, Line, ActionBox, BtnMenu } from './styles'
 
 export function Toolbar() {
 
@@ -30,7 +30,7 @@ export function Toolbar() {
                 <BtnMenu onClick={() => menuAlterado(MenuStates.POSTS)} selected={menu === MenuStates.POSTS}>Posts</BtnMenu>
             </ActionBox>
             <ContainerMenu>
-                <PostProfileImage alt="" src={user.foto || '/images/profile-default.jpg'} />
+                <PostProfileImage alt="" src={user.foto} />
                 <MenuProfile>
                     <span style={{ fontWeight: 'bold' }}>{user.nomeCompleto}</span>
                     <Line />

@@ -33,6 +33,17 @@ public class UsuarioController extends BaseController {
         return new ResponseEntity(usuarioLogado, HttpStatus.OK);
     }
 
+    @GetMapping("usuario/{id}")
+    public ResponseEntity obterDadosUsuario(HttpServletRequest request, @PathVariable long id) {
+
+        var usuario = usuarioRepository.buscarPorId(id);
+
+        if(usuario == null)
+            return badRequest("Usuário não encontrado.");
+
+        return new ResponseEntity(usuario, HttpStatus.OK);
+    }
+
     @GetMapping("usuarios")
     public ResponseEntity<List<UsuarioExibicaoDto>> obterUsuarios(@RequestParam String filtro) {
 

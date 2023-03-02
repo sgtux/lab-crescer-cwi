@@ -7,4 +7,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ComentarioRepository extends CrudRepository<Comentario, Long> {
 
+    void deleteByPostId(Long postId);
 }

@@ -57,4 +57,12 @@ public class PostRepository {
                 .setParameter("usuarioId", post.getUsuario().getId())
                 .executeUpdate();
     }
+
+    @Transactional
+    public void deletarPorId(long id) {
+        var sqlString = "DELETE FROM post WHERE id = :id";
+        var list = entityManager.createNativeQuery(sqlString)
+                .setParameter("id", id)
+                .executeUpdate();
+    }
 }

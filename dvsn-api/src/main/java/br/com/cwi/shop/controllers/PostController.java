@@ -4,6 +4,7 @@ import br.com.cwi.shop.dtos.PostDto;
 import br.com.cwi.shop.entities.Post;
 import br.com.cwi.shop.entities.Usuario;
 import br.com.cwi.shop.helpers.StringHelper;
+import br.com.cwi.shop.repository.ComentarioRepository;
 import br.com.cwi.shop.repository.PostRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class PostController extends BaseController {
 
     @Autowired
     public PostRepository repository;
+
+    @Autowired
+    public ComentarioRepository comentarioRepository;
 
     @GetMapping("/post")
     public List<PostDto> buscarPosts(@RequestParam(required = false) String filtro, HttpServletRequest request) {
@@ -74,6 +78,13 @@ public class PostController extends BaseController {
 
         repository.add(post);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("post/{id}")
+    public ResponseEntity removerPost(@PathVariable long id) {
+        comentarioRepository.deleteByPostId(id);
+        repository.deletarPorId(id);
         return ResponseEntity.ok().build();
     }
 }

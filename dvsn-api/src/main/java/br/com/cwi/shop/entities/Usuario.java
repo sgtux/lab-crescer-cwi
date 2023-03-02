@@ -1,6 +1,7 @@
 package br.com.cwi.shop.entities;
 
 import br.com.cwi.shop.helpers.Constantes;
+import br.com.cwi.shop.helpers.StringHelper;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -84,7 +85,7 @@ public class Usuario {
     }
 
     public String getFoto() {
-        return foto == null || foto.isEmpty() ? null : Constantes.getPrefixUploadPath() + this.foto;
+        return Constantes.getPrefixUploadPath() + (StringHelper.isNullOrEmpty(foto) ? "profile-default.jpg" : this.foto);
     }
 
     public void setFoto(String foto) {

@@ -31,6 +31,7 @@ export const SearchBtn = styled.button`
     font-size: 16px;
     padding: 6px 12px;
     text-transform: uppercase;
+    margin-bottom: 10px;
     &:hover {
         cursor: pointer;
         box-shadow: 0 0 1px 1px #ddd;

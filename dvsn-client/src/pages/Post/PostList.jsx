@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+
+import DOMPurify from 'dompurify'
+
 import { userChanged } from '../../store/actions'
 
 import { postService } from '../../services'
@@ -37,16 +40,17 @@ export function PostList() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        atualizar()
-        setFiltroResult('')
+        const qsParam = new URLSearchParams(document.location.search).get('filtro')
+        setFiltro(qsParam || '')
+        atualizar(qsParam || '')
     }, [])
 
-    function atualizar() {
+    function atualizar(qsParam) {
         setShowNewPost(false)
-        postService.obterTodos(filtro)
+        postService.obterTodos(filtro || qsParam)
             .then(res => {
                 setPosts(res)
-                setFiltroResult(filtro)
+                setFiltroResult(filtro || qsParam)
             })
             .catch(err => {
                 if ((err.response || {}).status === 401)
@@ -72,16 +76,26 @@ export function PostList() {
             .catch(err => console.log(err))
     }
 
+    function deletarPost(id) {
+        postService.deletarPost(id)
+            .then(res => atualizar())
+            .catch(err => console.log(err))
+    }
+
+    function buscar() {
+        window.location.href = `${window.location.href.split('?')[0]}?filtro=${filtro}`
+    }
+
     return (
         <PostListContainer>
-            <SearchInput onChange={e => setFiltro(e.target.value)} placeholder='Conteúdo ...' />
-            <SearchBtn onClick={() => atualizar()}>Buscar</SearchBtn>
-            {!!filtroResult && <div>Resultado para: <span dangerouslySetInnerHTML={{ __html: filtroResult }} /></div>}
+            <SearchInput value={filtro} onChange={e => setFiltro(e.target.value)} placeholder='Conteúdo ...' />
+            <SearchBtn onClick={() => buscar()}>Buscar</SearchBtn>
+            {!!filtroResult && <div>Resultado para: <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(filtroResult) }} /></div>}
             {!!posts.length && posts.map(p =>
                 <PostCard key={p.id}>
                     <PostCardHeader>
                         <PostUserBox>
-                            <PostProfileImage alt="" src={p.usuario.foto || '/images/profile-default.jpg'} />
+                            <PostProfileImage alt="" src={p.usuario.foto} />
                             <div>
                                 <h4>{p.usuario.nomeCompleto}</h4>
                                 <span>{p.criadoEmFormatado}</span>
@@ -90,7 +104,7 @@ export function PostList() {
                         {
                             p.owner &&
                             <div>
-                                <BtnRemove>
+                                <BtnRemove onClick={() => deletarPost(p.id)}>
                                     <em className="fa fa-trash"></em>
                                 </BtnRemove>
                             </div>
@@ -107,7 +121,7 @@ export function PostList() {
                         Comentários:
                         {!!p.comentarios.length && p.comentarios.map(x =>
                             <CommentBox key={x.id}>
-                                <PostProfileImage alt="" src={x.usuario.foto || '/images/profile-default.jpg'} />
+                                <PostProfileImage alt="" src={x.usuario.foto} />
                                 <div style={{ marginLeft: 10 }}>
                                     <div>
                                         <span style={{ fontSize: 20, fontWeight: 'bold' }}>{x.usuario.nomeCompleto}</span>

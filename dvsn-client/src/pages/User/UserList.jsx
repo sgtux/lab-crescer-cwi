@@ -31,7 +31,7 @@ export function UserList() {
             <SearchBtn onClick={() => atualizar()}>Pesquisar</SearchBtn>
             {!!users.length && users.map(p =>
                 <UserBox key={p.id}>
-                    <UserImage src={p.foto || '/images/profile-default.jpg'} />
+                    <UserImage src={p.foto} />
                     <div style={{ margin: 10, textAlign: 'left' }}>
                         <div style={{ marginTop: 6 }}>{p.nome} {p.sobrenome}</div>
                         <div style={{ marginTop: 6 }}>Posts: {p.quantidadePosts}</div>
