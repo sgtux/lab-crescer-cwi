@@ -53,4 +53,24 @@ public class UsuarioRepository {
         sqlString = String.format(sqlString, u.getNome(), u.getSobrenome(), u.getEmail(), hashSenha, "", 2, new Date());
         entityManager.createNativeQuery(sqlString).executeUpdate();
     }
+
+    @Transactional
+    public void atualizar(UsuarioDto u) {
+        if(StringHelper.isNullOrEmpty(u.getFoto())) {
+            var sqlString = "UPDATE usuario SET nome = :nome, sobrenome = :sobrenome where id = :id";
+            entityManager.createNativeQuery(sqlString)
+                    .setParameter("nome", u.getNome())
+                    .setParameter("sobrenome", u.getSobrenome())
+                    .setParameter("id", u.getId())
+                    .executeUpdate();
+        } else {
+            var sqlString = "UPDATE usuario SET nome = :nome, sobrenome = :sobrenome, foto = :foto where id = :id";
+            entityManager.createNativeQuery(sqlString)
+                    .setParameter("nome", u.getNome())
+                    .setParameter("sobrenome", u.getSobrenome())
+                    .setParameter("foto", u.getFoto())
+                    .setParameter("id", u.getId())
+                    .executeUpdate();
+        }
+    }
 }

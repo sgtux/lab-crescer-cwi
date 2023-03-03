@@ -8,7 +8,7 @@ export const PostCard = styled.div`
     padding: 10px;
     margin: 0 auto;
     margin-top: 20px;
-    box-shadow: 1px 1px 2px #666;
+    box-shadow: 1px 1px 2px #bbb;
     text-align: center;
     max-width: 600px;
     overflow: hidden;

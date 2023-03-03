@@ -3,6 +3,7 @@ package br.com.cwi.shop.helpers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public final class StringHelper {
@@ -45,11 +47,19 @@ public final class StringHelper {
         return hash.toString(16);
     }
 
-    public static String pathJoin(String... directories){
+    public static String pathJoin(String... directories) {
         String path = "";
         for(var dir : directories)
             path = new File(path, dir).toString();
         return path;
+    }
+
+    public static String createUploadFilePath(String filename) {
+        return StringHelper.pathJoin(System.getProperty("user.dir"), "src", "main", "resources", "public", "upload", filename);
+    }
+
+    public static String createFilenameFromMultipartFile(MultipartFile file) {
+        return String.format("%s.%s", UUID.randomUUID(), file.getOriginalFilename().split("\\.")[1]);
     }
 
     public static boolean isEmail(String email) {

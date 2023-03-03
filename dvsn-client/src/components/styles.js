@@ -38,3 +38,24 @@ export const SearchBtn = styled.button`
         background-color: #ddd;
     }
 `
+
+export const TextInput = styled.input`
+    border: 1px solid #dddfe2;
+    color: #1d2129;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    height: 50px;
+    line-height: 16px;
+    vertical-align: middle;
+    border-radius: 6px;
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-left: 6px;
+    width: 100%;
+`
+
+export const ErrorMessage = styled.div`
+    color: red;
+    align-text: center;
+    margin-top:10px;
+`

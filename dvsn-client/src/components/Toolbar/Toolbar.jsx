@@ -4,7 +4,17 @@ import { userChanged, menuChanged } from '../../store/actions'
 import { usuarioService } from '../../services'
 import { MenuStates } from '../../utils'
 
-import { BtnLogout, PostProfileImage, Container, MenuProfile, ContainerMenu, Line, ActionBox, BtnMenu } from './styles'
+import {
+    BtnLogout,
+    PostProfileImage,
+    Container,
+    MenuProfile,
+    ContainerMenu,
+    Line,
+    ActionBox,
+    BtnMenu,
+    UsernameSpan
+} from './styles'
 
 export function Toolbar() {
 
@@ -32,7 +42,7 @@ export function Toolbar() {
             <ContainerMenu>
                 <PostProfileImage alt="" src={user.foto} />
                 <MenuProfile>
-                    <span style={{ fontWeight: 'bold' }}>{user.nomeCompleto}</span>
+                    <UsernameSpan onClick={() => menuAlterado(MenuStates.EDIT_PROFILE)}>{user.nomeCompleto}</UsernameSpan>
                     <Line />
                     <BtnLogout onClick={() => logout()}>Sair</BtnLogout>
                 </MenuProfile>

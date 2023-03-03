@@ -51,7 +51,7 @@ public class PostController extends BaseController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image){
+    public ResponseEntity createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image) {
 
         var post = new Post();
         post.setTexto(text);
@@ -63,8 +63,8 @@ public class PostController extends BaseController {
         post.setUsuario(usuario);
 
         if(image != null) {
-            var filename = String.format("%s.%s", UUID.randomUUID(), image.getOriginalFilename().split("\\.")[1]);
-            var path = StringHelper.pathJoin(System.getProperty("user.dir"), "src", "main", "resources", "public", "upload", filename);
+            var filename = StringHelper.createFilenameFromMultipartFile(image);
+            var path = StringHelper.createUploadFilePath(filename);
 
             try {
                 try (OutputStream os = Files.newOutputStream(Paths.get(path))) {

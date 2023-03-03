@@ -98,3 +98,10 @@ export const BtnMenu = styled.button`
         cursor: pointer;
     }
 `
+
+export const UsernameSpan = styled.span`
+    font-weight: bold;
+    &:hover {
+        cursor: pointer;
+    }
+`

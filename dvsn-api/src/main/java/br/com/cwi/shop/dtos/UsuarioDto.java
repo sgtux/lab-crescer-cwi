@@ -35,6 +35,12 @@ public class UsuarioDto {
         atualizadoEm = usuario.getAtualizadoEm();
     }
 
+    public UsuarioDto(long id, String nome, String sobrenome) {
+        this.id = id;
+        this.nome = nome;
+        this.sobrenome = sobrenome;
+    }
+
     public Long getId() {
         return id;
     }

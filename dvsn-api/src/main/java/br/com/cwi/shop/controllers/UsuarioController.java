@@ -3,6 +3,8 @@ package br.com.cwi.shop.controllers;
 import br.com.cwi.shop.dtos.UsuarioDto;
 import br.com.cwi.shop.dtos.UsuarioExibicaoDto;
 import br.com.cwi.shop.dtos.UsuarioLogadoDto;
+import br.com.cwi.shop.entities.Post;
+import br.com.cwi.shop.entities.Usuario;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.PostRepository;
@@ -14,8 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,7 +42,7 @@ public class UsuarioController extends BaseController {
     }
 
     @GetMapping("usuario/{id}")
-    public ResponseEntity obterDadosUsuario(HttpServletRequest request, @PathVariable long id) {
+    public ResponseEntity obterDadosUsuario(@PathVariable long id) {
 
         var usuario = usuarioRepository.buscarPorId(id);
 
@@ -42,6 +50,36 @@ public class UsuarioController extends BaseController {
             return badRequest("Usuário não encontrado.");
 
         return new ResponseEntity(usuario, HttpStatus.OK);
+    }
+
+    @PutMapping("usuario/{id}")
+    public ResponseEntity update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
+
+        if(StringHelper.isNullOrEmpty(nome)) {
+            return badRequest("Nome inválido.");
+        }
+
+        if(StringHelper.isNullOrEmpty(sobrenome)) {
+            return badRequest("Sobrenome inválido.");
+        }
+
+        var usuario = new UsuarioDto(id, nome, sobrenome);
+        usuario.setAtualizadoEm(new Date());
+
+        if(imagem != null) {
+            var filename = StringHelper.createFilenameFromMultipartFile(imagem);
+            var path = StringHelper.createUploadFilePath(filename);
+            try {
+                try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
+                    os.write(imagem.getBytes());
+                }
+                usuario.setFoto(filename);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        usuarioRepository.atualizar(usuario);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("usuarios")
