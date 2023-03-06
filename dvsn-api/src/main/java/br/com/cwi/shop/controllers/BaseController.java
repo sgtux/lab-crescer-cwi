@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 public class BaseController {
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    protected UsuarioRepository usuarioRepository;
 
     protected UsuarioLogadoDto obterUsuarioLogado(HttpServletRequest request){
         var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);

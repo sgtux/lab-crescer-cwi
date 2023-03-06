@@ -1,19 +1,16 @@
-import { StorageKeys, MenuStates } from '../../utils'
+import { MenuStates } from '../../utils'
 import { ActionTypes } from '../actions'
 import { storageService } from '../../services'
 
 const initialState = {
-    user: JSON.parse(localStorage.getItem(StorageKeys.USER)),
+    user: storageService.getUser(),
     menu: storageService.getCurrentMenu() || MenuStates.POSTS
 }
 
 export const appReducer = (state = initialState, action) => {
     switch (action.type) {
         case ActionTypes.USER_CHANGED:
-            if (action.payload)
-                localStorage.setItem(StorageKeys.USER, JSON.stringify(action.payload))
-            else
-                localStorage.removeItem(StorageKeys.USER)
+            storageService.setUser(action.payload || null)
             return { ...state, user: action.payload }
         case ActionTypes.MENU_CHANGED:
             storageService.setCurrentMenu(action.payload)

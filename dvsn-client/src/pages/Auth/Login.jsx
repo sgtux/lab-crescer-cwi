@@ -8,7 +8,7 @@ import { userChanged } from '../../store/actions'
 import { usuarioService, storageService } from '../../services'
 
 export function Login({ onChangeMode }) {
- 
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
@@ -27,13 +27,9 @@ export function Login({ onChangeMode }) {
             return
 
         setLoading(true)
-        
+
         try {
-            const result = await usuarioService.login(email, password)
-            const { token } = result
-            storageService.setToken(token)
-            const data = await usuarioService.getUserData()
-            setLoading(false)
+            const data = await usuarioService.login(email, password)
             dispatch(userChanged(data))
         } catch (err) {
             setLoading(false)

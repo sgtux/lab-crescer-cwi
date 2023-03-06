@@ -9,6 +9,7 @@ public final class CookieHelper {
     public static void AddCookie(HttpServletResponse response, String chave, String valor, int segundos){
         var cookie = new Cookie(chave, valor);
         cookie.setMaxAge(segundos);
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 

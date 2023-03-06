@@ -3,7 +3,6 @@ package br.com.cwi.shop.controllers;
 import br.com.cwi.shop.dtos.ComentarioDto;
 import br.com.cwi.shop.entities.Comentario;
 import br.com.cwi.shop.entities.Post;
-import br.com.cwi.shop.entities.Usuario;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.ComentarioRepository;
 import br.com.cwi.shop.repository.PostRepository;
@@ -37,13 +36,16 @@ public class ComentarioController extends BaseController {
             return badRequest("Texto é obrigatório");
         }
 
+        var usuario = usuarioRepository.buscarPorId(comentarioDto.getUsuarioId());
+
+        if(usuario == null)
+            return badRequest("Usuário não encontrado");
+
         var comentario = new Comentario();
 
         comentario.setTexto(comentarioDto.getTexto());
         comentario.setCriadoEm(new Date());
 
-        var usuarioLogadoId = obterUsuarioLogado(request).getId();
-        var usuario = new Usuario(usuarioLogadoId);
         comentario.setUsuario(usuario);
 
         var post = new Post(postId);

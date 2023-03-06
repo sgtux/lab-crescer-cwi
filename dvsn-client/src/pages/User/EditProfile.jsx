@@ -23,7 +23,7 @@ export function EditProfile() {
     useEffect(() => {
         setNome(user.nome || '')
         setSobrenome(user.sobrenome || '')
-    }, [])
+    }, [user])
 
     function save() {
         const formData = new FormData()
@@ -31,7 +31,7 @@ export function EditProfile() {
         formData.append('sobrenome', sobrenome)
         formData.append('imagem', file)
         fetch(`/usuario/${user.id}`, { method: 'put', body: formData })
-            .then(async res => {                
+            .then(async res => {
                 if (res.status === 200)
                     usuarioService.getUserData()
                         .then(res => dispatch(userChanged(res)))
@@ -45,7 +45,6 @@ export function EditProfile() {
                 }
             })
             .catch(err => {
-                console.log('CATCH')
                 if (typeof (err.toJSON) === 'function' && err.toJSON().status === 400) {
                     setErrorMessage(err.response.data.erro)
                 }

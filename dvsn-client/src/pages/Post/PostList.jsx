@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import DOMPurify from 'dompurify'
 
@@ -37,6 +37,8 @@ export function PostList() {
     const [filtroResult, setFiltroResult] = useState('')
     const [comentarios, setComentarios] = useState({})
 
+    const { user } = useSelector(state => state.appState)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -60,7 +62,7 @@ export function PostList() {
     }
 
     function enviarComentario(postId) {
-        postService.adicionarComentario({ postId, texto: comentarios[postId] })
+        postService.adicionarComentario({ usuarioId: user.id, postId, texto: comentarios[postId] })
             .then(res => {
                 const keyPair = { ...comentarios }
                 keyPair[postId] = ''

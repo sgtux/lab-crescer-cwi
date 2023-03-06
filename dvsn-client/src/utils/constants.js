@@ -1,5 +1,6 @@
 export const StorageKeys = {
-    CURRENT_MENU: '@CURRENT_MENU'
+    CURRENT_MENU: '@CURRENT_MENU',
+    USER: '@USER'
 }
 
 export const MenuStates = {
