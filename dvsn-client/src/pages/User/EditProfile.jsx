@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { usuarioService } from '../../services'
 
-import { TextInput, ErrorMessage } from '../../components'
-import { Container } from './styles'
+import { TextInput, ErrorMessage, CustomButton, SuccessMessage } from '../../components'
+import { Container, FieldName } from './styles'
 
 import { userChanged } from '../../store/actions'
 
@@ -14,11 +14,15 @@ export function EditProfile() {
     const [sobrenome, setSobrenome] = useState('')
     const [file, setFile] = useState(null)
     const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
 
     const { user } = useSelector(state => state.appState)
     const dispatch = useDispatch()
 
-    useEffect(() => setErrorMessage(''), [nome, sobrenome])
+    useEffect(() => {
+        setErrorMessage('')
+        setSuccessMessage('')
+    }, [nome, sobrenome])
 
     useEffect(() => {
         setNome(user.nome || '')
@@ -32,11 +36,12 @@ export function EditProfile() {
         formData.append('imagem', file)
         fetch(`/usuario/${user.id}`, { method: 'put', body: formData })
             .then(async res => {
-                if (res.status === 200)
+                if (res.status === 200) {
+                    setSuccessMessage('Salvo com sucesso.')
                     usuarioService.getUserData()
                         .then(res => dispatch(userChanged(res)))
                         .catch(err => console.log(err))
-                else if (res.status === 400) {
+                } else if (res.status === 400) {
                     const json = await res.json()
                     setErrorMessage(json.erro)
                     console.log(json.erro)
@@ -54,12 +59,16 @@ export function EditProfile() {
 
     return (
         <Container>
-            <TextInput value={nome} placeholder="Nome" onChange={e => setNome(e.target.value)} />
-            <TextInput value={sobrenome} placeholder="Sobrenome" onChange={e => setSobrenome(e.target.value)} />
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <input type='file' style={{ marginTop: 20 }} onChange={e => setFile(e.target.files[0])} />
+            <TextInput style={{ width: 200 }} value={nome} placeholder="Nome" onChange={e => setNome(e.target.value)} />
+            <TextInput style={{ width: 200 }} value={sobrenome} placeholder="Sobrenome" onChange={e => setSobrenome(e.target.value)} />            
+            <div>
+                <FieldName>Foto:</FieldName>
+                <input type='file' style={{ marginTop: 20 }} onChange={e => setFile(e.target.files[0])} />
+            </div>
             <br /><br />
-            <button onClick={() => save()}>SALVAR</button>
+            <CustomButton onClick={() => save()}>SALVAR</CustomButton>
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+            {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
         </Container>
     )
 }

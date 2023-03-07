@@ -4,14 +4,12 @@ import br.com.cwi.shop.dtos.UsuarioDto;
 import br.com.cwi.shop.dtos.UsuarioExibicaoDto;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.PostRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,7 +31,7 @@ public class UsuarioController extends BaseController {
             if (usuario == null)
                 return badRequest("Usuário não encontrado.");
 
-            return new ResponseEntity(usuario, HttpStatus.OK);
+            return ResponseEntity.ok(new UsuarioDto(usuario));
         }catch(Exception ex) {
             return internalServerError(ex);
         }
@@ -56,14 +54,10 @@ public class UsuarioController extends BaseController {
             if (imagem != null) {
                 var filename = StringHelper.createFilenameFromMultipartFile(imagem);
                 var path = StringHelper.createUploadFilePath(filename);
-                try {
-                    try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
-                        os.write(imagem.getBytes());
-                    }
-                    usuario.setFoto(filename);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
+                    os.write(imagem.getBytes());
                 }
+                usuario.setFoto(filename);
             }
             usuarioRepository.atualizar(usuario);
             return ResponseEntity.ok().build();

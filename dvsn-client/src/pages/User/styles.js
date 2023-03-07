@@ -21,3 +21,8 @@ export const UserImage = styled.img`
     width: 100px;
     border-radius: 20px;
 `
+
+export const FieldName = styled.span`
+    font-size: 20px;    
+    margin-right: 10px;
+`

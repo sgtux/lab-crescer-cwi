@@ -59,3 +59,25 @@ export const ErrorMessage = styled.div`
     align-text: center;
     margin-top:10px;
 `
+
+export const SuccessMessage = styled.div`
+    color: green;
+    align-text: center;
+    margin-top:10px;
+`
+
+
+export const CustomButton = styled.button`
+    background-color: #1877f2;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    height: 50px;
+    font-size: 30px;
+    transition: 200ms;
+    &:hover {
+        opacity: .8;
+        cursor: pointer;
+    }
+`
