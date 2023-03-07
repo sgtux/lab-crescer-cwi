@@ -25,65 +25,70 @@ public class UsuarioController extends BaseController {
     @Autowired
     private PostRepository postRepository;
 
-    @GetMapping("usuario")
-    public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
-        var usuarioLogado = obterUsuarioLogado(request);
-        return new ResponseEntity(usuarioLogado, HttpStatus.OK);
-    }
-
     @GetMapping("usuario/{id}")
     public ResponseEntity obterDadosUsuario(@PathVariable long id) {
+        try {
+            var usuario = usuarioRepository.buscarPorId(id);
 
-        var usuario = usuarioRepository.buscarPorId(id);
+            if (usuario == null)
+                return badRequest("Usuário não encontrado.");
 
-        if(usuario == null)
-            return badRequest("Usuário não encontrado.");
-
-        return new ResponseEntity(usuario, HttpStatus.OK);
+            return new ResponseEntity(usuario, HttpStatus.OK);
+        }catch(Exception ex) {
+            return internalServerError(ex);
+        }
     }
 
     @PutMapping("usuario/{id}")
     public ResponseEntity update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
-
-        if(StringHelper.isNullOrEmpty(nome)) {
-            return badRequest("Nome inválido.");
-        }
-
-        if(StringHelper.isNullOrEmpty(sobrenome)) {
-            return badRequest("Sobrenome inválido.");
-        }
-
-        var usuario = new UsuarioDto(id, nome, sobrenome);
-        usuario.setAtualizadoEm(new Date());
-
-        if(imagem != null) {
-            var filename = StringHelper.createFilenameFromMultipartFile(imagem);
-            var path = StringHelper.createUploadFilePath(filename);
-            try {
-                try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
-                    os.write(imagem.getBytes());
-                }
-                usuario.setFoto(filename);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+        try {
+            if (StringHelper.isNullOrEmpty(nome)) {
+                return badRequest("Nome inválido.");
             }
+
+            if (StringHelper.isNullOrEmpty(sobrenome)) {
+                return badRequest("Sobrenome inválido.");
+            }
+
+            var usuario = new UsuarioDto(id, nome, sobrenome);
+            usuario.setAtualizadoEm(new Date());
+
+            if (imagem != null) {
+                var filename = StringHelper.createFilenameFromMultipartFile(imagem);
+                var path = StringHelper.createUploadFilePath(filename);
+                try {
+                    try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
+                        os.write(imagem.getBytes());
+                    }
+                    usuario.setFoto(filename);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            usuarioRepository.atualizar(usuario);
+            return ResponseEntity.ok().build();
+        }catch(Exception ex) {
+            return internalServerError(ex);
         }
-        usuarioRepository.atualizar(usuario);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("usuarios")
-    public ResponseEntity<List<UsuarioExibicaoDto>> obterUsuarios(@RequestParam String filtro) {
+    public ResponseEntity obterUsuarios(@RequestParam String filtro) {
 
-        List<UsuarioExibicaoDto> list = new ArrayList<>();
+        try {
 
-        for (var item : usuarioRepository.buscar(filtro)) {
-            var dto = new UsuarioExibicaoDto(item);
-            var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
-            dto.setQuantidadePosts(quantidatePostsUsuario);
-            list.add(dto);
+            List<UsuarioExibicaoDto> list = new ArrayList<>();
+
+            for (var item : usuarioRepository.buscar(filtro)) {
+                var dto = new UsuarioExibicaoDto(item);
+                var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
+                dto.setQuantidadePosts(quantidatePostsUsuario);
+                list.add(dto);
+            }
+
+            return new ResponseEntity(list, HttpStatus.OK);
+        } catch(Exception ex) {
+            return internalServerError(ex);
         }
-
-        return new ResponseEntity(list, HttpStatus.OK);
     }
 }

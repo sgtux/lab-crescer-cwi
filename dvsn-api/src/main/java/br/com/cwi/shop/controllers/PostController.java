@@ -30,60 +30,74 @@ public class PostController extends BaseController {
     public ComentarioRepository comentarioRepository;
 
     @GetMapping("/post")
-    public List<PostDto> buscarPosts(@RequestParam(required = false) String filtro, HttpServletRequest request) {
+    public ResponseEntity buscarPosts(@RequestParam(required = false) String filtro, HttpServletRequest request) {
 
-        var list = new ArrayList<PostDto>();
+        try {
+            var list = new ArrayList<PostDto>();
 
-        var idUsuarioLogado = obterUsuarioLogado(request).getId();
+            var idUsuarioLogado = obterUsuarioLogado(request).getId();
 
-        for(var post : repository.buscar(filtro)){
-            var postDto = new PostDto(post);
-            postDto.setOwner(postDto.getUsuario().getId() == idUsuarioLogado);
+            for (var post : repository.buscar(filtro)) {
+                var postDto = new PostDto(post);
+                postDto.setOwner(postDto.getUsuario().getId() == idUsuarioLogado);
 
-            for(var comentario : postDto.getComentarios())
-                comentario.setOwner(comentario.getUsuarioId() == idUsuarioLogado);
+                for (var comentario : postDto.getComentarios())
+                    comentario.setOwner(comentario.getUsuarioId() == idUsuarioLogado);
 
-            list.add(postDto);
+                list.add(postDto);
+            }
+
+            return ResponseEntity.ok(list);
+        } catch(Exception ex) {
+            return internalServerError(ex);
         }
-
-        return list;
     }
 
     @PostMapping("/post")
     public ResponseEntity createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image) {
 
-        var post = new Post();
-        post.setTexto(text);
+        try {
 
-        post.setVisibilidade("P");
-        post.setCriadoEm(new Date());
-        var usuario = new Usuario();
-        usuario.setId(obterUsuarioLogado(request).getId());
-        post.setUsuario(usuario);
+            var post = new Post();
+            post.setTexto(text);
 
-        if(image != null) {
-            var filename = StringHelper.createFilenameFromMultipartFile(image);
-            var path = StringHelper.createUploadFilePath(filename);
+            post.setVisibilidade("P");
+            post.setCriadoEm(new Date());
+            var usuario = new Usuario();
+            usuario.setId(obterUsuarioLogado(request).getId());
+            post.setUsuario(usuario);
 
-            try {
-                try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
-                    os.write(image.getBytes());
+            if (image != null) {
+                var filename = StringHelper.createFilenameFromMultipartFile(image);
+                var path = StringHelper.createUploadFilePath(filename);
+
+                try {
+                    try (OutputStream os = Files.newOutputStream(Paths.get(path))) {
+                        os.write(image.getBytes());
+                    }
+                    post.setFoto(filename);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
-                post.setFoto(filename);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
             }
+
+            repository.add(post);
+
+            return ResponseEntity.ok().build();
+        } catch(Exception ex) {
+            return internalServerError(ex);
         }
-
-        repository.add(post);
-
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("post/{id}")
     public ResponseEntity removerPost(@PathVariable long id) {
-        comentarioRepository.deleteByPostId(id);
-        repository.deletarPorId(id);
-        return ResponseEntity.ok().build();
+
+        try {
+            comentarioRepository.deleteByPostId(id);
+            repository.deletarPorId(id);
+            return ResponseEntity.ok().build();
+        }catch(Exception ex) {
+            return internalServerError(ex);
+        }
     }
 }

@@ -9,13 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Controller
-public class DownloadController {
+public class DownloadController extends BaseController {
 
     @GetMapping("/image/{fileName:.+}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
@@ -31,8 +30,8 @@ public class DownloadController {
             headers.setCacheControl("no-cache");
 
             return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-        }catch(IOException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            return internalServerError(ex);
         }
     }
 }

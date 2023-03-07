@@ -8,21 +8,27 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class HelloController {
+public class HelloController extends BaseController {
 
     @GetMapping(value = "/hello", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<String> hello(@RequestParam(required = false) String nome) {
+    public ResponseEntity hello(@RequestParam(required = false) String nome) {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html><body style='font-size:30px'><div id='div'>");
+        try {
 
-        if(StringHelper.isNullOrEmpty(nome))
-            sb.append("Informe o parâmetro 'nome' na url.");
-        else
-            sb.append("Olá ").append(nome);
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html><body style='font-size:30px'><div id='div'>");
 
-        sb.append("</div></body></html>");
+            if (StringHelper.isNullOrEmpty(nome))
+                sb.append("Informe o parâmetro 'nome' na url.");
+            else
+                sb.append("Olá ").append(nome);
 
-        return ResponseEntity.ok(sb.toString());
+            sb.append("</div></body></html>");
+
+            return ResponseEntity.ok(sb.toString());
+
+        } catch(Exception ex) {
+            return internalServerError(ex);
+        }
     }
 }

@@ -1,10 +1,10 @@
 package br.com.cwi.shop.dtos;
 
-public class BadRequestDto {
+public class ResponseErrorDto {
 
     private String erro;
 
-    public BadRequestDto(String erro) {
+    public ResponseErrorDto(String erro) {
         this.erro = erro;
     }
 

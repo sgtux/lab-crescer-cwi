@@ -39,7 +39,7 @@ public class CookieBase64AuthenticationFilter extends OncePerRequestFilter {
             var usuario = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
             var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(), new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (JsonProcessingException ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         } finally {
             filterChain.doFilter(request, response);

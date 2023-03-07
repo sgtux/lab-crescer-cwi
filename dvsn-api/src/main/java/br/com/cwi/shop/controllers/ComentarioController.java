@@ -25,44 +25,51 @@ public class ComentarioController extends BaseController {
     @PostMapping("comentario")
     public ResponseEntity criarComentario(HttpServletRequest request, @RequestBody ComentarioDto comentarioDto) {
 
-        var postId = comentarioDto.getPostId();
+        try {
+            var postId = comentarioDto.getPostId();
 
-        if(postId == 0 || postRepository.buscarPorId(postId) == null)
-        {
-            return badRequest("Post não encontrado.");
+            if (postId == 0 || postRepository.buscarPorId(postId) == null) {
+                return badRequest("Post não encontrado.");
+            }
+
+            if (StringHelper.isNullOrEmpty(comentarioDto.getTexto())) {
+                return badRequest("Texto é obrigatório");
+            }
+
+            var usuario = usuarioRepository.buscarPorId(comentarioDto.getUsuarioId());
+
+            if (usuario == null)
+                return badRequest("Usuário não encontrado");
+
+            var comentario = new Comentario();
+
+            comentario.setTexto(comentarioDto.getTexto());
+            comentario.setCriadoEm(new Date());
+
+            comentario.setUsuario(usuario);
+
+            var post = new Post(postId);
+            comentario.setPost(post);
+
+            comentarioRepository.save(comentario);
+
+            return ResponseEntity.ok().build();
+        }catch(Exception ex){
+            return internalServerError(ex);
         }
-
-        if(StringHelper.isNullOrEmpty(comentarioDto.getTexto())){
-            return badRequest("Texto é obrigatório");
-        }
-
-        var usuario = usuarioRepository.buscarPorId(comentarioDto.getUsuarioId());
-
-        if(usuario == null)
-            return badRequest("Usuário não encontrado");
-
-        var comentario = new Comentario();
-
-        comentario.setTexto(comentarioDto.getTexto());
-        comentario.setCriadoEm(new Date());
-
-        comentario.setUsuario(usuario);
-
-        var post = new Post(postId);
-        comentario.setPost(post);
-
-        comentarioRepository.save(comentario);
-
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("comentario/{id}")
     public ResponseEntity removerComentario(@PathVariable long id) {
 
-        if(!comentarioRepository.existsById(id))
-            return badRequest("Comentário não encontrado.");
+        try {
+            if (!comentarioRepository.existsById(id))
+                return badRequest("Comentário não encontrado.");
 
-        comentarioRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+            comentarioRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }catch(Exception ex) {
+            return internalServerError(ex);
+        }
     }
 }
