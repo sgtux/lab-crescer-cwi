@@ -1,5 +1,12 @@
 version: "3"
 services:
+
+  ctf-app:
+    build: ./ctf-app
+    networks:
+      lan:
+        ipv4_address: 172.45.45.20
+
   database:
     environment:
       - POSTGRES_PASSWORD=Postgres123
