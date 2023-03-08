@@ -8,7 +8,6 @@ import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.UsuarioRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +23,13 @@ public class BaseController {
             try {
                 var userJson = StringHelper.fromBase64(cookie);
                 var usuarioLogado = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
+
                 var usuarioDb = usuarioRepository.buscarPorId(usuarioLogado.getId());
 
-                if(usuarioDb == null)
-                    return null;
+                if(usuarioDb != null)
+                    usuarioLogado.setFoto(usuarioDb.getFoto());
 
-                return new UsuarioLogadoDto(usuarioDb);
+                return usuarioLogado;
             } catch (JsonProcessingException ex) {
                 System.err.println(ex);
             }

@@ -24,7 +24,10 @@ export function Toolbar() {
 
     function logout() {
         usuarioService.logout()
-            .then(() => dispatch(userChanged(null)))
+            .then(() => {
+                dispatch(menuChanged(MenuStates.POSTS))
+                dispatch(userChanged(null))
+            })
     }
 
     function menuAlterado(novoMenu) {
@@ -38,7 +41,7 @@ export function Toolbar() {
             <ActionBox>
                 <BtnMenu onClick={() => menuAlterado(MenuStates.USUARIOS)} selected={menu === MenuStates.USUARIOS}>Usuários</BtnMenu>
                 <BtnMenu onClick={() => menuAlterado(MenuStates.POSTS)} selected={menu === MenuStates.POSTS}>Posts</BtnMenu>
-                <BtnMenu onClick={() => menuAlterado(MenuStates.HASH)} selected={menu === MenuStates.HASH}>Hash</BtnMenu>
+                {(user || {}).funcao === 1 && <BtnMenu onClick={() => menuAlterado(MenuStates.HASH)} selected={menu === MenuStates.HASH}>Hash</BtnMenu>}
             </ActionBox>
             <ContainerMenu>
                 <PostProfileImage alt="" src={user.foto} />

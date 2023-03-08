@@ -14,6 +14,8 @@ public class UsuarioLogadoDto {
 
     private String foto;
 
+    private long funcao;
+
     private String nomeCompleto;
 
     public UsuarioLogadoDto(){}
@@ -24,6 +26,7 @@ public class UsuarioLogadoDto {
         sobrenome = usuario.getSobrenome();
         email = usuario.getEmail();
         foto = usuario.getFoto();
+        funcao = usuario.getFuncao();
     }
 
     public Long getId() {
@@ -68,5 +71,13 @@ public class UsuarioLogadoDto {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public long getFuncao() {
+        return funcao;
+    }
+
+    public void setFuncao(long funcao) {
+        this.funcao = funcao;
     }
 }
