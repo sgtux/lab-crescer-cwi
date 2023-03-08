@@ -6,5 +6,6 @@ export const StorageKeys = {
 export const MenuStates = {
     POSTS: 'POSTS',
     USUARIOS: 'USUARIOS',
-    EDIT_PROFILE: 'EDIT_PROFILE'
+    EDIT_PROFILE: 'EDIT_PROFILE',
+    HASH: 'HASH'
 }

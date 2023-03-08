@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { UserBox, Container, UserImage } from './styles'
 import { usuarioService } from '../../services'
 import { userChanged } from '../../store/actions'
-import { Footer, SearchBtn, SearchInput } from '../../components'
+import { SearchBtn, SearchInput } from '../../components'
 
 export function UserList() {
 
@@ -39,7 +39,6 @@ export function UserList() {
                     </div>
                 </UserBox>
             )}
-            <Footer>Mantenha a segurança simples</Footer>
         </Container>
     )
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController extends BaseController {
+
     @PostMapping("criarConta")
     public ResponseEntity criarConta(@RequestBody UsuarioDto usuarioDto) {
         try {

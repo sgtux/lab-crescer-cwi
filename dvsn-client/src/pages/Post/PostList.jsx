@@ -6,7 +6,7 @@ import DOMPurify from 'dompurify'
 import { userChanged } from '../../store/actions'
 
 import { postService } from '../../services'
-import { Footer, SearchBtn, SearchInput } from '../../components'
+import { SearchBtn, SearchInput } from '../../components'
 
 import {
     PostListContainer,
@@ -152,7 +152,6 @@ export function PostList() {
             <NewPostButtonBox>
                 <NewPostButton onClick={() => setShowNewPost(true)}>Novo Post</NewPostButton>
             </NewPostButtonBox>
-            <Footer />
         </PostListContainer >
     )
 }

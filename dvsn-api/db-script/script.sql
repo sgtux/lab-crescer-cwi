@@ -28,14 +28,6 @@ CREATE TABLE comentario (
     post_id INT CONSTRAINT fk_comentario_post REFERENCES post (id)
 );
 
-CREATE TABLE rainbowtable (
-    id SERIAL PRIMARY KEY,
-    texto VARCHAR(200) NOT NULL,
-    hash_md5 VARCHAR(200) NOT NULL,
-    hash_sha1 VARCHAR(200) NOT NULL,
-    hash_bcrypt VARCHAR(200) NOT NULL
-);
-
 INSERT INTO usuario (nome, sobrenome, email, senha, foto, funcao, criado_em, atualizado_em) VALUES
 ('Janis', 'Joplin', 'janis@mail.com', '46f94c8de14fb36680850768ff1b7f2a', '4b0a5bindex.jpg', 2, '2021-04-18 14:49:16.698882', '2021-04-26 14:49:26.435425'),
 ('Jimi', 'Hendrix', 'jimi@mail.com', '061fba5bdfc076bb7362616668de87c8', '4cc947jimiprofile.jpg', 2, '2021-04-20 14:29:16.749603', '2021-04-26 14:45:12.258211'),
