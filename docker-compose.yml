@@ -1,11 +1,16 @@
 version: "3"
 services:
 
-  ctf-app:
-    build: ./ctf-app
+  proxy:
+    build: ./proxy
     networks:
       lan:
         ipv4_address: 172.45.45.20
+    volumes:
+      - ./proxy/files/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+      - ./proxy/files/apache.crt:/etc/ssl/certs/apache.crt
+      - ./proxy/files/apache.key:/etc/ssl/private/apache.key
+      - ./proxy/files/apache.crt:/root/apache.crt
 
   database:
     environment:
