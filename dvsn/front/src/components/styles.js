@@ -81,3 +81,13 @@ export const CustomButton = styled.button`
         cursor: pointer;
     }
 `
+
+export const SaveButton = styled(CustomButton)`
+    width: 300px;
+`
+
+export const ResetButton = styled(CustomButton)`
+    width: 300px;
+    background-color: white;
+    color: #666;
+`

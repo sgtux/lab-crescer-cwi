@@ -58,7 +58,7 @@ public class AuthenticationController extends BaseController {
                 try {
                     String jsonData = StringHelper.toJson(usuarioLogadoDto);
                     String cookieValue = StringHelper.toBase64(jsonData);
-                    CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue, 60 * 60);
+                    CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue);
                     return new ResponseEntity(usuarioLogadoDto, HttpStatus.OK);
                 } catch (Exception ex) {
                     System.out.println(ex);
@@ -74,7 +74,7 @@ public class AuthenticationController extends BaseController {
     @GetMapping("logout")
     public ResponseEntity logout(HttpServletResponse response) {
         try {
-            CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, "", 0);
+            CookieHelper.clearCookie(response, Constantes.AUTH_COOKIE_NAME);
             return new ResponseEntity(HttpStatus.OK);
         } catch(Exception ex) {
             return internalServerError(ex);

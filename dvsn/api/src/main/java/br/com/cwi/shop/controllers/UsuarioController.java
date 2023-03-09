@@ -4,6 +4,7 @@ import br.com.cwi.shop.dtos.UsuarioDto;
 import br.com.cwi.shop.dtos.UsuarioExibicaoDto;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.PostRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,20 @@ public class UsuarioController extends BaseController {
 
     @Autowired
     private PostRepository postRepository;
+
+    @GetMapping("usuario")
+    public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
+        try {
+            var usuario = obterUsuarioLogado(request);
+
+            if (usuario == null)
+                return badRequest("Usuário não encontrado.");
+
+            return ResponseEntity.ok(usuario);
+        }catch(Exception ex) {
+            return internalServerError(ex);
+        }
+    }
 
     @GetMapping("usuario/{id}")
     public ResponseEntity obterDadosUsuario(@PathVariable long id) {

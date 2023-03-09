@@ -56,4 +56,17 @@ public class AdminController extends BaseController{
 
         return ResponseEntity.ok(config);
     }
+
+    @DeleteMapping("security-config")
+    public ResponseEntity resetSecurityRuntimeConfig(HttpServletRequest request) {
+
+        if(!isAdmin(request))
+            return forbidden();
+
+        SecurityRuntimeConfig.reset();
+
+        var config = new SecurityRuntimeConfigDto(SecurityRuntimeConfig.getInstance());
+
+        return ResponseEntity.ok(config);
+    }
 }

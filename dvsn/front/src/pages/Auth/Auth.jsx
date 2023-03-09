@@ -18,7 +18,7 @@ export function Auth() {
 
     useEffect(async () => {
         try {
-            const data = await usuarioService.getUserData()
+            const data = await usuarioService.getUserLogado()
             dispatch(userChanged(data))
         } catch (e) { }
     }, [])

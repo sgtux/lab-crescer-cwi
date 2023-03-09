@@ -5,6 +5,21 @@ import br.com.cwi.shop.security.SecurityRuntimeConfig;
 public class SecurityRuntimeConfigDto {
     private boolean cookieHttpOnly;
 
+    private boolean cookieSecure;
+
+    private String cookieDomain;
+
+    private int cookieMinutes;
+
+    public SecurityRuntimeConfigDto() { }
+
+    public SecurityRuntimeConfigDto(SecurityRuntimeConfig config) {
+        cookieHttpOnly = config.isCookieHttpOnly();
+        cookieSecure = config.isCookieSecure();
+        cookieDomain = config.getCookieDomain();
+        cookieMinutes = config.getCookieMinutes();
+    }
+
     public boolean isCookieHttpOnly() {
         return cookieHttpOnly;
     }
@@ -13,9 +28,27 @@ public class SecurityRuntimeConfigDto {
         this.cookieHttpOnly = cookieHttpOnly;
     }
 
-    public SecurityRuntimeConfigDto() { }
+    public boolean isCookieSecure() {
+        return cookieSecure;
+    }
 
-    public SecurityRuntimeConfigDto(SecurityRuntimeConfig config) {
-        cookieHttpOnly = config.isCookieHttpOnly();
+    public void setCookieSecure(boolean cookieSecure) {
+        this.cookieSecure = cookieSecure;
+    }
+
+    public String getCookieDomain() {
+        return cookieDomain;
+    }
+
+    public void setCookieDomain(String cookieDomain) {
+        this.cookieDomain = cookieDomain;
+    }
+
+    public int getCookieMinutes() {
+        return cookieMinutes;
+    }
+
+    public void setCookieMinutes(int cookieMinutes) {
+        this.cookieMinutes = cookieMinutes;
     }
 }

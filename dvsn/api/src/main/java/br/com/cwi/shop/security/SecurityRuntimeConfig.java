@@ -8,14 +8,31 @@ public final class SecurityRuntimeConfig {
 
     private boolean cookieHttpOnly;
 
+    private boolean cookieSecure;
+
+    private String cookieDomain;
+
+    private int cookieMinutes;
+
     private SecurityRuntimeConfig() {
-        cookieHttpOnly = true;
+        cookieMinutes = 20;
     }
 
     public static SecurityRuntimeConfig getInstance() {
         if(instance == null)
             instance = new SecurityRuntimeConfig();
         return instance;
+    }
+
+    public static void reset() {
+        instance = new SecurityRuntimeConfig();
+    }
+
+    public void update(SecurityRuntimeConfigDto config) {
+        setCookieHttpOnly(config.isCookieHttpOnly());
+        setCookieDomain(config.getCookieDomain());
+        setCookieSecure(config.isCookieSecure());
+        setCookieMinutes(config.getCookieMinutes());
     }
 
     public boolean isCookieHttpOnly() {
@@ -26,7 +43,27 @@ public final class SecurityRuntimeConfig {
         this.cookieHttpOnly = cookieHttpOnly;
     }
 
-    public void update(SecurityRuntimeConfigDto config) {
-        setCookieHttpOnly(config.isCookieHttpOnly());
+    public boolean isCookieSecure() {
+        return cookieSecure;
+    }
+
+    public void setCookieSecure(boolean cookieSecure) {
+        this.cookieSecure = cookieSecure;
+    }
+
+    public String getCookieDomain() {
+        return cookieDomain;
+    }
+
+    public void setCookieDomain(String cookieDomain) {
+        this.cookieDomain = cookieDomain;
+    }
+
+    public int getCookieMinutes() {
+        return cookieMinutes;
+    }
+
+    public void setCookieMinutes(int cookieMinutes) {
+        this.cookieMinutes = cookieMinutes;
     }
 }

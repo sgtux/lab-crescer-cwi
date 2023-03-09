@@ -10,6 +10,8 @@ const getUserId = () => (storageService.getUser() || {}).id || 0
 
 const getUserData = () => axios.get(`/usuario/${getUserId()}`).then(p => p.data)
 
+const getUserLogado = () => axios.get('/usuario').then(p => p.data)
+
 const buscar = filtro => axios.get(`/usuarios?filtro=${filtro || ''}`).then(p => p.data)
 
 const login = (email, senha) => axios.post('/auth/login', { email, senha }).then(p => p.data)
@@ -23,5 +25,6 @@ export const usuarioService = {
     buscar,
     login,
     logout,
-    create
+    create,
+    getUserLogado
 }
