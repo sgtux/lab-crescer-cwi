@@ -37,6 +37,15 @@ public class BaseController {
         return null;
     }
 
+    public boolean isAdmin(HttpServletRequest request) {
+        var usuario = obterUsuarioLogado(request);
+        return usuario.getFuncao() == 1;
+    }
+
+    protected ResponseEntity<ResponseErrorDto> forbidden() {
+        return new ResponseEntity("Acesso proibido.", HttpStatus.FORBIDDEN);
+    }
+
     protected ResponseEntity<ResponseErrorDto> badRequest(String erro) {
         return new ResponseEntity(new ResponseErrorDto(erro), HttpStatus.BAD_REQUEST);
     }

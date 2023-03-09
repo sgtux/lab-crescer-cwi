@@ -4,7 +4,6 @@ import br.com.cwi.shop.dtos.UsuarioLogadoDto;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.CookieHelper;
 import br.com.cwi.shop.helpers.StringHelper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

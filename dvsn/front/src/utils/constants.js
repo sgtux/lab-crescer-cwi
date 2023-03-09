@@ -7,5 +7,6 @@ export const MenuStates = {
     POSTS: 'POSTS',
     USUARIOS: 'USUARIOS',
     EDIT_PROFILE: 'EDIT_PROFILE',
-    HASH: 'HASH'
+    HASH: 'HASH',
+    SECURITY_CONFIG: 'SECURITY_CONFIG'
 }

@@ -42,6 +42,7 @@ export function Toolbar() {
                 <BtnMenu onClick={() => menuAlterado(MenuStates.USUARIOS)} selected={menu === MenuStates.USUARIOS}>Usuários</BtnMenu>
                 <BtnMenu onClick={() => menuAlterado(MenuStates.POSTS)} selected={menu === MenuStates.POSTS}>Posts</BtnMenu>
                 {(user || {}).funcao === 1 && <BtnMenu onClick={() => menuAlterado(MenuStates.HASH)} selected={menu === MenuStates.HASH}>Hash</BtnMenu>}
+                {(user || {}).funcao === 1 && <BtnMenu onClick={() => menuAlterado(MenuStates.SECURITY_CONFIG)} selected={menu === MenuStates.SECURITY_CONFIG}>Segurança</BtnMenu>}
             </ActionBox>
             <ContainerMenu>
                 <PostProfileImage alt="" src={user.foto} />

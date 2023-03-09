@@ -1,5 +1,6 @@
 package br.com.cwi.shop.helpers;
 
+import br.com.cwi.shop.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -7,9 +8,13 @@ import jakarta.servlet.http.HttpServletResponse;
 public final class CookieHelper {
 
     public static void AddCookie(HttpServletResponse response, String chave, String valor, int segundos){
+
+        var config = SecurityRuntimeConfig.getInstance();
+
         var cookie = new Cookie(chave, valor);
         cookie.setMaxAge(segundos);
         cookie.setPath("/");
+        cookie.setHttpOnly(config.isCookieHttpOnly());
         response.addCookie(cookie);
     }
 

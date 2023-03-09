@@ -1,11 +1,12 @@
 package br.com.cwi.shop.controllers;
 
 import br.com.cwi.shop.dtos.HashDto;
+import br.com.cwi.shop.dtos.SecurityRuntimeConfigDto;
 import br.com.cwi.shop.entities.RainbowTableHash;
 import br.com.cwi.shop.repository.RainbowTableRepository;
+import br.com.cwi.shop.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,8 @@ public class AdminController extends BaseController{
     @PostMapping("rainbowtable")
     public ResponseEntity rainbowtable(HttpServletRequest request, @RequestBody HashDto hashDto) {
 
-        var usuario = obterUsuarioLogado(request);
-        if(usuario.getFuncao() != 1)
-            return new ResponseEntity("Acesso proibido.", HttpStatus.FORBIDDEN);
+        if(!isAdmin(request))
+            return forbidden();
 
         RainbowTableHash rainbowTableHash = null;
 
@@ -33,5 +33,27 @@ public class AdminController extends BaseController{
             rainbowTableHash = rainbowTableRepository.findBySha1(hashDto.getHash());
 
         return ResponseEntity.ok(rainbowTableHash);
+    }
+
+    @PutMapping("security-config")
+    public ResponseEntity updateSecurityRuntimeConfig(HttpServletRequest request, @RequestBody SecurityRuntimeConfigDto config) {
+
+        if(!isAdmin(request))
+            return forbidden();
+
+        SecurityRuntimeConfig.getInstance().update(config);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("security-config")
+    public ResponseEntity updateSecurityRuntimeConfig(HttpServletRequest request) {
+
+        if(!isAdmin(request))
+            return forbidden();
+
+        var config = new SecurityRuntimeConfigDto(SecurityRuntimeConfig.getInstance());
+
+        return ResponseEntity.ok(config);
     }
 }
