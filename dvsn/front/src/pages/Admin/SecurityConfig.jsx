@@ -1,16 +1,22 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { adminService } from '../../services'
 
 import { TextInput, SaveButton, ResetButton } from '../../components'
 import { Container, FieldName } from './styles'
 
+import { userChanged } from '../../store/actions'
+
 export function SecurityConfig() {
 
     const [cookieHttpOnly, setCookieHttpOnly] = useState(false)
     const [cookieSecure, setCookieSecure] = useState(false)
     const [cookieDomain, setCookieDomain] = useState('')
-    const [cookieMinutes, setCookieMinutes] = useState(false)
+    const [sessionMinutes, setSessionMinutes] = useState(false)
+    const [tipoAutenticacao, setTipoAutenticacao] = useState('CookieBase64')
+
+    const dispatch = useDispatch()
 
     function refresh() {
         adminService.getSecurityConfig()
@@ -18,9 +24,15 @@ export function SecurityConfig() {
                 setCookieHttpOnly(res.cookieHttpOnly)
                 setCookieSecure(res.cookieSecure)
                 setCookieDomain(res.cookieDomain || '')
-                setCookieMinutes(res.cookieMinutes)
+                setSessionMinutes(res.sessionMinutes)
+                setTipoAutenticacao(res.tipoAutenticacao)
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                if (err.toJSON().status === 401) {
+                    dispatch(userChanged(null))
+                }
+            })
     }
 
     useEffect(() => refresh(), [])
@@ -30,7 +42,8 @@ export function SecurityConfig() {
             cookieHttpOnly,
             cookieSecure,
             cookieDomain,
-            cookieMinutes: Number(cookieMinutes || 0)
+            sessionMinutes: Number(sessionMinutes || 0),
+            tipoAutenticacao
         })
             .then(() => {
                 refresh()
@@ -63,12 +76,20 @@ export function SecurityConfig() {
                 <TextInput style={{ width: 200 }} value={cookieDomain} onChange={e => setCookieDomain(e.target.value)} />
             </div>
             <div>
-                <FieldName>Minutos:</FieldName>
-                <TextInput style={{ width: 200 }} value={cookieMinutes} onChange={e => setCookieMinutes(e.target.value)} />
+                <FieldName>Tempo Sessão:</FieldName>
+                <TextInput style={{ width: 200 }} value={sessionMinutes} onChange={e => setSessionMinutes(e.target.value)} />
+            </div>
+            <div>
+                <FieldName>Tipo Autenticacao:</FieldName>
+                <select value={tipoAutenticacao} onChange={e => setTipoAutenticacao(e.target.value)}>
+                    <option value="CookieBase64">Cookie Base64</option>
+                    <option value="Jwt">Jwt</option>
+                    <option value="TokenOpaco">Token Opaco</option>
+                </select>
             </div>
             <br /><br />
-            <SaveButton onClick={() => save()}>Salvar</SaveButton>
             <ResetButton onClick={() => reset()}>Restaurar</ResetButton>
+            <SaveButton onClick={() => save()}>Salvar</SaveButton>
         </Container>
     )
 }

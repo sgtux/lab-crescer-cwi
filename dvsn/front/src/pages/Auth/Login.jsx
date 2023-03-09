@@ -5,7 +5,7 @@ import { FormContainer, TextInput, Button, ChangeScreenButton, ErrorMessage, Lin
 
 import { userChanged } from '../../store/actions'
 
-import { usuarioService, storageService } from '../../services'
+import { usuarioService } from '../../services'
 
 export function Login({ onChangeMode }) {
 

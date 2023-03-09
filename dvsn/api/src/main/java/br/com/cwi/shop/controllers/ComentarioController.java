@@ -54,7 +54,7 @@ public class ComentarioController extends BaseController {
             comentarioRepository.save(comentario);
 
             return ResponseEntity.ok().build();
-        }catch(Exception ex){
+        } catch(Exception ex) {
             return internalServerError(ex);
         }
     }

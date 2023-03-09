@@ -12,11 +12,17 @@ const setUser = user => user ? localStorage.setItem(StorageKeys.USER, JSON.strin
 
 const getUser = () => JSON.parse(localStorage.getItem(StorageKeys.USER))
 
+const getAuthHeaders = () => {
+    const token = (getUser() || {}).token
+    return token ? { headers: { Authorization: `Bearer ${token}` } } : null
+}
+
 export const storageService = {
     setCurrentMenu,
     getCurrentMenu,
     setToken,
     getToken,
     getUser,
-    setUser
+    setUser,
+    getAuthHeaders
 }

@@ -1,9 +1,12 @@
-package br.com.cwi.shop.auth;
+package br.com.cwi.shop.auth.filters;
 
+import br.com.cwi.shop.auth.UsuarioDetails;
 import br.com.cwi.shop.dtos.UsuarioLogadoDto;
+import br.com.cwi.shop.enums.TipoAutenticacao;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.CookieHelper;
 import br.com.cwi.shop.helpers.StringHelper;
+import br.com.cwi.shop.security.SecurityRuntimeConfig;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +28,11 @@ public class CookieBase64AuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
+        if(SecurityRuntimeConfig.getInstance().getTipoAutenticacao() != TipoAutenticacao.CookieBase64) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
 

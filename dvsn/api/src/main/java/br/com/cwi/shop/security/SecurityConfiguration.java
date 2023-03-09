@@ -1,6 +1,7 @@
 package br.com.cwi.shop.security;
 
-import br.com.cwi.shop.auth.CookieBase64AuthenticationFilter;
+import br.com.cwi.shop.auth.filters.CookieBase64AuthenticationFilter;
+import br.com.cwi.shop.auth.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final CookieBase64AuthenticationFilter authFilter;
+    private final CookieBase64AuthenticationFilter cookieBase64AuthenticationFilter;
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private final AuthenticationProvider authenticationProvider;
 
@@ -25,7 +28,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/", "/index.html", "/static/**", "/fontawesome/**")
+                .requestMatchers("/auth/**", "/", "/index.html", "/static/**", "/fontawesome/**", "/image/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -36,7 +39,8 @@ public class SecurityConfiguration {
                 .and()
                 .cors().disable()
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(cookieBase64AuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, CookieBase64AuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 

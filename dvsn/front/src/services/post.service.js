@@ -1,12 +1,14 @@
 import axios from 'axios'
 
-const obterTodos = filtro => axios.get(`/post?filtro=${filtro || ''}`).then(p => p.data)
+import {storageService} from './storage.service'
 
-const deletarPost = id => axios.delete(`/post/${id}`)
+const obterTodos = filtro => axios.get(`/post?filtro=${filtro || ''}`, storageService.getAuthHeaders()).then(p => p.data)
 
-const adicionarComentario = comentario => axios.post('/comentario', comentario)
+const deletarPost = id => axios.delete(`/post/${id}`, storageService.getAuthHeaders())
 
-const deletarComentario = id => axios.delete(`/comentario/${id}`)
+const adicionarComentario = comentario => axios.post('/comentario', comentario, storageService.getAuthHeaders())
+
+const deletarComentario = id => axios.delete(`/comentario/${id}`, storageService.getAuthHeaders())
 
 export const postService = {
     obterTodos,

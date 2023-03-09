@@ -12,7 +12,7 @@ public final class CookieHelper {
         var config = SecurityRuntimeConfig.getInstance();
 
         var cookie = new Cookie(chave, valor);
-        cookie.setMaxAge(config.getCookieMinutes() * 60);
+        cookie.setMaxAge(config.getSessionMinutes() * 60);
         cookie.setPath("/");
         cookie.setHttpOnly(config.isCookieHttpOnly());
         cookie.setSecure(config.isCookieSecure());

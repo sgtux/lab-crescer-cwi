@@ -2,10 +2,13 @@ package br.com.cwi.shop.controllers;
 
 import br.com.cwi.shop.dtos.ResponseErrorDto;
 import br.com.cwi.shop.dtos.UsuarioLogadoDto;
+import br.com.cwi.shop.enums.TipoAutenticacao;
 import br.com.cwi.shop.helpers.Constantes;
 import br.com.cwi.shop.helpers.CookieHelper;
+import br.com.cwi.shop.helpers.JwtHelper;
 import br.com.cwi.shop.helpers.StringHelper;
 import br.com.cwi.shop.repository.UsuarioRepository;
+import br.com.cwi.shop.security.SecurityRuntimeConfig;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,14 @@ public class BaseController {
     @Autowired
     protected UsuarioRepository usuarioRepository;
 
-    protected UsuarioLogadoDto obterUsuarioLogado(HttpServletRequest request){
+    protected UsuarioLogadoDto obterUsuarioLogado(HttpServletRequest request) {
+
+        var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+        if(tipoAutenticacao == TipoAutenticacao.Jwt) {
+            var usuario = JwtHelper.verificarToken(request);
+            return new UsuarioLogadoDto(usuario);
+        }
+
         var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
         if(cookie != null) {
             try {

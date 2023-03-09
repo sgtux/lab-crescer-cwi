@@ -83,11 +83,13 @@ export const CustomButton = styled.button`
 `
 
 export const SaveButton = styled(CustomButton)`
-    width: 300px;
+    width: 200px;
 `
 
 export const ResetButton = styled(CustomButton)`
-    width: 300px;
+    width: 200px;
     background-color: white;
     color: #666;
+    margin-left: 10px;
+    margin-right: 10px;
 `

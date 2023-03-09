@@ -1,6 +1,7 @@
 package br.com.cwi.shop.security;
 
 import br.com.cwi.shop.dtos.SecurityRuntimeConfigDto;
+import br.com.cwi.shop.enums.TipoAutenticacao;
 
 public final class SecurityRuntimeConfig {
 
@@ -12,10 +13,13 @@ public final class SecurityRuntimeConfig {
 
     private String cookieDomain;
 
-    private int cookieMinutes;
+    private int sessionMinutes;
+
+    private TipoAutenticacao tipoAutenticacao;
 
     private SecurityRuntimeConfig() {
-        cookieMinutes = 20;
+        sessionMinutes = 20;
+        tipoAutenticacao = TipoAutenticacao.CookieBase64;
     }
 
     public static SecurityRuntimeConfig getInstance() {
@@ -32,7 +36,8 @@ public final class SecurityRuntimeConfig {
         setCookieHttpOnly(config.isCookieHttpOnly());
         setCookieDomain(config.getCookieDomain());
         setCookieSecure(config.isCookieSecure());
-        setCookieMinutes(config.getCookieMinutes());
+        setSessionMinutes(config.getSessionMinutes());
+        setTipoAutenticacao(config.getTipoAutenticacao());
     }
 
     public boolean isCookieHttpOnly() {
@@ -59,11 +64,19 @@ public final class SecurityRuntimeConfig {
         this.cookieDomain = cookieDomain;
     }
 
-    public int getCookieMinutes() {
-        return cookieMinutes;
+    public int getSessionMinutes() {
+        return sessionMinutes;
     }
 
-    public void setCookieMinutes(int cookieMinutes) {
-        this.cookieMinutes = cookieMinutes;
+    public void setSessionMinutes(int sessionMinutes) {
+        this.sessionMinutes = sessionMinutes;
+    }
+
+    public TipoAutenticacao getTipoAutenticacao() {
+        return tipoAutenticacao;
+    }
+
+    public void setTipoAutenticacao(TipoAutenticacao tipoAutenticacao) {
+        this.tipoAutenticacao = tipoAutenticacao;
     }
 }

@@ -18,9 +18,11 @@ public class UsuarioLogadoDto {
 
     private String nomeCompleto;
 
-    public UsuarioLogadoDto(){}
+    private String token;
 
-    public UsuarioLogadoDto(Usuario usuario){
+    public UsuarioLogadoDto() { }
+
+    public UsuarioLogadoDto(Usuario usuario) {
         id = usuario.getId();
         nome = usuario.getNome();
         sobrenome = usuario.getSobrenome();
@@ -79,5 +81,13 @@ public class UsuarioLogadoDto {
 
     public void setFuncao(long funcao) {
         this.funcao = funcao;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
