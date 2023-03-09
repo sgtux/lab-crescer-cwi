@@ -85,7 +85,7 @@ public class Usuario {
     }
 
     public String getFoto() {
-        return Constantes.getPrefixUploadPath() + (StringHelper.isNullOrEmpty(foto) ? "profile-default.jpg" : this.foto);
+        return Constantes.getPrefixUrlImage() + (StringHelper.isNullOrEmpty(foto) ? "profile-default.jpg" : this.foto);
     }
 
     public void setFoto(String foto) {

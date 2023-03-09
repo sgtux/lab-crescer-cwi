@@ -12,6 +12,9 @@ services:
       - ./proxy/files/apache.key:/etc/ssl/private/apache.key
   
   dvsn:
+    environment:
+      - PREFIX_URL_IMAGE=https://www.crescer.lab/image/
+      - PREFIX_UPLOAD_PATH=/upload
     depends_on:
       - database
     build: ./dvsn

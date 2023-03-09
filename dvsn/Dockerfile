@@ -6,4 +6,5 @@ RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip
 FROM maven:3.8.5-openjdk-17
 EXPOSE 8080
 COPY --from=build /app/target/*.jar app.jar
+COPY /api/src/main/resources/public/upload /upload
 ENTRYPOINT ["java", "-jar", "/app.jar"]

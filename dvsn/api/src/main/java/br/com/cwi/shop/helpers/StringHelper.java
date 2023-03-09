@@ -74,7 +74,11 @@ public final class StringHelper {
     }
 
     public static String createUploadFilePath(String filename) {
-        return StringHelper.pathJoin(System.getProperty("user.dir"), "src", "main", "resources", "public", "upload", filename);
+        var prefix = System.getenv("PREFIX_UPLOAD_PATH");
+        if(prefix == null)
+            return StringHelper.pathJoin(System.getProperty("user.dir"), "src", "main", "resources", "public", "upload", filename);
+        else
+            return StringHelper.pathJoin(prefix, filename);
     }
 
     public static String createFilenameFromMultipartFile(MultipartFile file) {

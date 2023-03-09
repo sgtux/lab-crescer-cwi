@@ -68,7 +68,7 @@ public class PostDto {
     }
 
     public String getFoto() {
-        return this.foto == null || foto.isEmpty() ? null : Constantes.getPrefixUploadPath() + this.foto;
+        return this.foto == null || foto.isEmpty() ? null : Constantes.getPrefixUrlImage() + this.foto;
     }
 
     public void setFoto(String foto) {
