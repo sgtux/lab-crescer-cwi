@@ -10,7 +10,6 @@ services:
       - ./proxy/files/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
       - ./proxy/files/apache.crt:/etc/ssl/certs/apache.crt
       - ./proxy/files/apache.key:/etc/ssl/private/apache.key
-      - ./proxy/files/apache.crt:/root/apache.crt
   
   dvsn:
     build: ./dvsn
