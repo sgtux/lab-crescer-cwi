@@ -12,6 +12,8 @@ services:
       - ./proxy/files/apache.key:/etc/ssl/private/apache.key
   
   dvsn:
+    depends_on:
+      - database
     build: ./dvsn
     networks:
       lan:
