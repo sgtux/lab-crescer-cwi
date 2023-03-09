@@ -11,6 +11,12 @@ services:
       - ./proxy/files/apache.crt:/etc/ssl/certs/apache.crt
       - ./proxy/files/apache.key:/etc/ssl/private/apache.key
       - ./proxy/files/apache.crt:/root/apache.crt
+  
+  dvsn:
+    build: ./dvsn
+    networks:
+      lan:
+        ipv4_address: 172.45.45.30
 
   database:
     environment:
