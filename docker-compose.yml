@@ -1,5 +1,27 @@
 version: "3"
 services:
+
+  proxy:
+    build: ./proxy
+    networks:
+      lan:
+        ipv4_address: 172.45.45.20
+    volumes:
+      - ./proxy/files/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+      - ./proxy/files/apache.crt:/etc/ssl/certs/apache.crt
+      - ./proxy/files/apache.key:/etc/ssl/private/apache.key
+  
+  dvsn:
+    environment:
+      - PREFIX_URL_IMAGE=https://www.crescer.lab/image/
+      - PREFIX_UPLOAD_PATH=/upload
+    depends_on:
+      - database
+    build: ./dvsn
+    networks:
+      lan:
+        ipv4_address: 172.45.45.30
+
   database:
     environment:
       - POSTGRES_PASSWORD=Postgres123

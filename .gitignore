@@ -1,3 +1,4 @@
 node_modules
 demo
-dvsn-api/src/main/resources/public
+dvsn/api/src/main/resources/public
+.idea
