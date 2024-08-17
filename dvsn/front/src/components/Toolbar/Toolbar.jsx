@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { userChanged, menuChanged } from '../../store/actions'
-import { usuarioService } from '../../services'
+import { userChanged, menuChanged, securityConfigChanged } from '../../store/actions'
+import { usuarioService, adminService } from '../../services'
 import { MenuStates } from '../../utils'
 
 import {
@@ -13,7 +13,7 @@ import {
     Line,
     ActionBox,
     BtnMenu,
-    UsernameSpan
+    MenuItem
 } from './styles'
 
 export function Toolbar() {
@@ -21,6 +21,15 @@ export function Toolbar() {
     const { user, menu } = useSelector(state => state.appState)
 
     const dispatch = useDispatch()
+
+    useEffect(async () => {
+        try {
+            const config = await adminService.getSecurityConfig()
+            dispatch(securityConfigChanged(config))
+        } catch (ex) {
+            console.log(ex)
+        }
+    }, [])
 
     function logout() {
         usuarioService.logout()
@@ -47,7 +56,9 @@ export function Toolbar() {
             <ContainerMenu>
                 <PostProfileImage alt="" src={user.foto} />
                 <MenuProfile>
-                    <UsernameSpan onClick={() => menuAlterado(MenuStates.EDIT_PROFILE)}>{user.nomeCompleto}</UsernameSpan>
+                    <MenuItem onClick={() => menuAlterado(MenuStates.EDIT_PROFILE)}>{user.nomeCompleto}</MenuItem>
+                    <Line />
+                    <MenuItem onClick={() => menuAlterado(MenuStates.CHANGE_PASSWORD)}>alterar senha</MenuItem>
                     <Line />
                     <BtnLogout onClick={() => logout()}>Sair</BtnLogout>
                 </MenuProfile>

@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
     display: flex;
-    flex-orientation: row;
     justify-content: space-between;
     text-align: end;
     height: 60px;
@@ -93,13 +92,13 @@ export const BtnMenu = styled.button`
     background: transparent;
     font-size: 20px;
     text-transform: uppercase;
-    color: ${({selected}) => selected ? '#aaa' : '#555' };
+    color: ${({ selected }) => selected ? '#aaa' : '#555'};
     &:hover {
         cursor: pointer;
     }
 `
 
-export const UsernameSpan = styled.span`
+export const MenuItem = styled.span`
     font-weight: bold;
     &:hover {
         cursor: pointer;

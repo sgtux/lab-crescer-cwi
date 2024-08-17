@@ -37,7 +37,7 @@ export function PostList() {
     const [filtroResult, setFiltroResult] = useState('')
     const [comentarios, setComentarios] = useState({})
 
-    const { user } = useSelector(state => state.appState)
+    const { user, securityConfig } = useSelector(state => state.appState)
 
     const dispatch = useDispatch()
 
@@ -49,14 +49,17 @@ export function PostList() {
 
     function atualizar(qsParam) {
         setShowNewPost(false)
-        postService.obterTodos(filtro || qsParam)
+        postService.obterTodos(qsParam)
             .then(res => {
                 setPosts(res)
-                setFiltroResult(filtro || qsParam)
+                console.log({ qsParam, filtro, sinitized: DOMPurify.sanitize(filtro || qsParam) })
+                setFiltroResult(securityConfig.xssPreventionEnabled ? DOMPurify.sanitize(qsParam) : qsParam)
             })
             .catch(err => {
-                if ((err.response || {}).status === 401)
+                if ((err.response || {}).status === 401) {
                     dispatch(userChanged(null))
+                    return
+                }
                 console.log(err)
             })
     }
@@ -92,7 +95,7 @@ export function PostList() {
         <PostListContainer>
             <SearchInput value={filtro} onChange={e => setFiltro(e.target.value)} placeholder='Conteúdo ...' />
             <SearchBtn onClick={() => buscar()}>Buscar</SearchBtn>
-            {!!filtroResult && <div>Resultado para: <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(filtroResult) }} /></div>}
+            {!!filtroResult && <div>Resultado para: <span dangerouslySetInnerHTML={{ __html: filtroResult }} /></div>}
             {!!posts.length && posts.map(p =>
                 <PostCard key={p.id}>
                     <PostCardHeader>
@@ -134,7 +137,7 @@ export function PostList() {
                                             </BtnRemoveComment>
                                         }
                                     </div>
-                                    <div dangerouslySetInnerHTML={{ __html: x.texto }} />
+                                    <div dangerouslySetInnerHTML={{ __html: securityConfig.xssPreventionEnabled ? DOMPurify.sanitize(x.texto) : x.texto }} />
                                 </div>
                             </CommentBox>)
                         }

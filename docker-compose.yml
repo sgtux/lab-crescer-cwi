@@ -30,6 +30,20 @@ services:
       lan:
         ipv4_address: 172.45.45.10
 
+  httpd:
+    image: httpd
+    networks:
+      lan:
+        ipv4_address: 172.45.45.40
+    volumes: 
+      - ./malicious-server/files:/usr/local/apache2/htdocs/
+
+  request-logger:
+    build: ./request-logger
+    networks:
+      lan:
+        ipv4_address: 172.45.45.50
+
 networks:
   lan:
     ipam:
