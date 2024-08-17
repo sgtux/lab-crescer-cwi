@@ -23,7 +23,7 @@ docker-compose up
 $ ./create-database.sh
 ```
 
-### 3. Entrar na pasta do front (dvsn-client) e dar build no projeto, para que os arquivos sejam colocados ná pasta estática da api.
+### 3. Entrar na pasta do front (dvsn/front) e dar build no projeto, para que os arquivos sejam colocados na pasta estática da api.
 
 NPM:
 ```
@@ -36,7 +36,7 @@ yarn
 yarn build
 ```
 
-### 4. Abrir o IntelliJ e rodar a aplicação.
+### 4. Abrir o VS Code ou IntelliJ e rodar a aplicação.
 Main Class -> RootApplication.java
 
 ## Usuários disponíveis
