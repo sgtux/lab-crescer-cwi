@@ -4,8 +4,6 @@ import br.com.dvsn.entities.Sessao;
 import br.com.dvsn.entities.Usuario;
 import br.com.dvsn.repository.SessaoRepository;
 import br.com.dvsn.security.SecurityRuntimeConfig;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Calendar;
@@ -33,19 +31,37 @@ public class TokenOpacoHelper {
 
         var header = request.getHeader("Authorization");
 
-        if(StringHelper.isNullOrEmpty(header))
+        if (StringHelper.isNullOrEmpty(header))
             return null;
 
         var token = header.replace(PREFIXO_TOKEN, "");
 
-        if(StringHelper.isNullOrEmpty(token))
+        if (StringHelper.isNullOrEmpty(token))
             return null;
 
         var sessao = sessaoRepository.findByToken(token);
 
-        if(!sessao.isAtivo() || sessao.getExpiraEm().compareTo(new Date()) < 0)
+        if (!sessao.isAtivo() || sessao.getExpiraEm().compareTo(new Date()) < 0)
             return null;
 
         return sessao;
+    }
+
+    public static void removerSessao(HttpServletRequest request, SessaoRepository sessaoRepository) {
+
+        var header = request.getHeader("Authorization");
+
+        if (StringHelper.isNullOrEmpty(header))
+            return;
+
+        var token = header.replace(PREFIXO_TOKEN, "");
+
+        if (StringHelper.isNullOrEmpty(token))
+            return;
+
+        var sessao = sessaoRepository.findByToken(token);
+
+        sessao.setAtivo(false);
+        sessaoRepository.save(sessao);
     }
 }

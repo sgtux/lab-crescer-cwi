@@ -4,10 +4,12 @@ import br.com.dvsn.entities.Usuario;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class JwtHelper {
 
@@ -16,7 +18,6 @@ public class JwtHelper {
     private static String PREFIXO_TOKEN = "Bearer ";
 
     public static String criarToken(Usuario usuario) {
-        var date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, SecurityRuntimeConfig.getInstance().getSessionMinutes());
         String token = JWT.create()
@@ -35,18 +36,25 @@ public class JwtHelper {
 
         var header = request.getHeader("Authorization");
 
-        if(StringHelper.isNullOrEmpty(header))
+        if (StringHelper.isNullOrEmpty(header))
             return null;
 
         var token = header.replace(PREFIXO_TOKEN, "");
 
-        var decoded = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                .build()
-                .verify(token.replace(PREFIXO_TOKEN, ""));
+        DecodedJWT decoded = null;
+
+        try {
+            decoded = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
+                    .build()
+                    .verify(token);
+        } catch (TokenExpiredException ex) {
+            System.out.println(ex.getStackTrace());
+            throw ex;
+        }
 
         Usuario usuario = null;
 
-        if(decoded != null) {
+        if (decoded != null) {
             usuario = new Usuario();
             usuario.setId(decoded.getClaim("id").asLong());
             usuario.setNome(decoded.getClaim("nome").asString());

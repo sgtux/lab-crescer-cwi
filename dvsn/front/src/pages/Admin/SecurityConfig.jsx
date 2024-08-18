@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { adminService } from '../../services'
@@ -21,28 +21,26 @@ export function SecurityConfig() {
 
     const dispatch = useDispatch()
 
-    function refresh() {
-        adminService.getSecurityConfig()
-            .then(res => {
-                setXssPreventionEnabled(res.xssPreventionEnabled)
-                setXssStoredPreventionEnabled(res.xssStoredPreventionEnabled)
-                setSqlInjectionPreventionEnabled(res.sqlInjectionPreventionEnabled)
-                setCookieHttpOnly(res.cookieHttpOnly)
-                setCookieSecure(res.cookieSecure)
-                setCookieDomain(res.cookieDomain || '')
-                setSessionMinutes(res.sessionMinutes)
-                setTipoAutenticacao(res.tipoAutenticacao)
-                dispatch(securityConfigChanged(res))
-            })
-            .catch(err => {
-                console.log(err)
-                if (err.toJSON().status === 401) {
-                    dispatch(userChanged(null))
-                }
-            })
-    }
+    const refresh = useCallback(async () => {
+        try {
+            const res = await adminService.getSecurityConfig()
+            setXssPreventionEnabled(res.xssPreventionEnabled)
+            setXssStoredPreventionEnabled(res.xssStoredPreventionEnabled)
+            setSqlInjectionPreventionEnabled(res.sqlInjectionPreventionEnabled)
+            setCookieHttpOnly(res.cookieHttpOnly)
+            setCookieSecure(res.cookieSecure)
+            setCookieDomain(res.cookieDomain || '')
+            setSessionMinutes(res.sessionMinutes)
+            setTipoAutenticacao(res.tipoAutenticacao)
+            dispatch(securityConfigChanged(res))
+        } catch (err) {
+            if (err.toJSON().status === 401) {
+                dispatch(userChanged(null))
+            }
+        }
+    }, [dispatch])
 
-    useEffect(() => refresh(), [])
+    useEffect(() => refresh(), [refresh])
 
     function save() {
         adminService.updateSecurityConfig({

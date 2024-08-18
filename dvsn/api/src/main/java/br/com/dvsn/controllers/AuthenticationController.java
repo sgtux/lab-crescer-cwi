@@ -5,8 +5,8 @@ import br.com.dvsn.dtos.UsuarioLogadoDto;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.helpers.*;
 import br.com.dvsn.repository.SessaoRepository;
-import br.com.dvsn.repository.UsuarioRepository;
 import br.com.dvsn.security.SecurityRuntimeConfig;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,9 +89,12 @@ public class AuthenticationController extends BaseController {
     }
 
     @GetMapping("logout")
-    public ResponseEntity logout(HttpServletResponse response) {
+    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             CookieHelper.clearCookie(response, Constantes.AUTH_COOKIE_NAME);
+            var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+            if (tipoAutenticacao == TipoAutenticacao.TokenOpaco)
+                TokenOpacoHelper.removerSessao(request, sessaoRepository);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception ex) {
             return internalServerError(ex);
