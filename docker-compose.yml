@@ -8,6 +8,7 @@ services:
         ipv4_address: 172.45.45.20
     volumes:
       - ./proxy/files/default-ssl.conf:/etc/apache2/sites-available/default-ssl.conf
+      - ./proxy/files/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./proxy/files/apache.crt:/etc/ssl/certs/apache.crt
       - ./proxy/files/apache.key:/etc/ssl/private/apache.key
   
@@ -21,6 +22,8 @@ services:
     networks:
       lan:
         ipv4_address: 172.45.45.30
+    volumes:
+      - ./logs/dvsn.log:/logs/application.log
 
   database:
     environment:

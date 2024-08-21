@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,12 +24,16 @@ import java.util.ArrayList;
 @Component
 public class CookieBase64AuthenticationFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LogManager.getLogger(CookieBase64AuthenticationFilter.class);
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+
+        logger.info("REQUEST_URL: " + request.getRequestURL());
 
         if(SecurityRuntimeConfig.getInstance().getTipoAutenticacao() != TipoAutenticacao.CookieBase64) {
             filterChain.doFilter(request, response);
