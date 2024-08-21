@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { userChanged, menuChanged, securityConfigChanged } from '../../store/actions'
 import { usuarioService, adminService } from '../../services'
@@ -22,14 +22,18 @@ export function Toolbar() {
 
     const dispatch = useDispatch()
 
-    useEffect(async () => {
+    const init = useCallback(async () => {
         try {
             const config = await adminService.getSecurityConfig()
             dispatch(securityConfigChanged(config))
-        } catch (ex) {
-            console.log(ex)
+        } catch (err) {
+            if (err.toJSON().status === 401) {
+                dispatch(userChanged(null))
+            }
         }
-    }, [])
+    }, [dispatch])
+
+    useEffect(() => init(), [init])
 
     function logout() {
         usuarioService.logout()
@@ -46,7 +50,7 @@ export function Toolbar() {
 
     return (
         <Container>
-            <img src="favicon.ico" height={50} />
+            <img src="favicon.ico" height={50} alt=''/>
             <ActionBox>
                 <BtnMenu onClick={() => menuAlterado(MenuStates.USUARIOS)} selected={menu === MenuStates.USUARIOS}>Usuários</BtnMenu>
                 <BtnMenu onClick={() => menuAlterado(MenuStates.POSTS)} selected={menu === MenuStates.POSTS}>Posts</BtnMenu>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { UserBox, Container, UserImage } from './styles'
@@ -11,19 +11,20 @@ export function UserList() {
     const [users, setUsers] = useState([])
     const [filtro, setFiltro] = useState('')
 
-    useEffect(() => atualizar(), [])
-
     const dispatch = useDispatch()
 
-    function atualizar() {
-        usuarioService.buscar(filtro)
-            .then(res => setUsers(res))
-            .catch(err => {
-                if ((err.response || {}).status === 401)
-                    dispatch(userChanged(null))
-                console.error(err)
-            })
-    }
+    const atualizar = useCallback(async () => {
+        try {
+            const res = await usuarioService.buscar(filtro)
+            setUsers(res)
+        } catch (err) {
+            console.error(err)
+            if ((err.response || {}).status === 401)
+                dispatch(userChanged(null))
+        }
+    }, [dispatch, filtro])
+
+    useEffect(() => atualizar(), [atualizar])
 
     return (
         <Container>

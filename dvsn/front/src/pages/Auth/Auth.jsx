@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Container, Title } from './styles'
@@ -16,12 +16,16 @@ export function Auth() {
     const [isLogin, setIsLogin] = useState(true)
     const dispatch = useDispatch()
 
-    useEffect(async () => {
+    const init = useCallback(async () => {
         try {
             const data = await usuarioService.getUserLogado()
             dispatch(userChanged(data))
-        } catch (e) { }
-    }, [])
+        } catch (e) {
+            console.log(e)
+        }
+    }, [dispatch])
+
+    useEffect(() => init(), [init])
 
     return (
         <Container>

@@ -2,7 +2,6 @@ package br.com.dvsn.auth.filters;
 
 import br.com.dvsn.auth.UsuarioDetails;
 import br.com.dvsn.enums.TipoAutenticacao;
-import br.com.dvsn.helpers.JwtHelper;
 import br.com.dvsn.helpers.TokenOpacoHelper;
 import br.com.dvsn.repository.SessaoRepository;
 import br.com.dvsn.repository.UsuarioRepository;

