@@ -30,11 +30,15 @@ public final class StringHelper {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(object);
     }
-
-    public static <T> T fromJson(String jsonData, Class<T> valueType) throws JsonProcessingException {
+    
+    public static <T> T fromJson(String jsonData, Class<T> valueType) {
         ObjectMapper mapper = new ObjectMapper();
-        JavaType type = mapper.getTypeFactory().constructType(valueType);
-        return (T)mapper.readValue(jsonData, type);
+        try {
+            JavaType type = mapper.getTypeFactory().constructType(valueType);
+            return mapper.readValue(jsonData, type);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Erro ao desserializar JSON", e);
+        }
     }
 
     public static String md5(String texto) {

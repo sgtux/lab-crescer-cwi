@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 public class DownloadController extends BaseController {
 
     @GetMapping("/image/{fileName:.+}")
-    public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
+    public ResponseEntity<?> downloadFileFromLocal(@PathVariable String fileName) {
         try {
             var path = StringHelper.createUploadFilePath(fileName);
 

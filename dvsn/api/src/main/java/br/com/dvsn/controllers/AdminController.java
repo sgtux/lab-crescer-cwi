@@ -22,7 +22,7 @@ public class AdminController extends BaseController {
     private RainbowTableRepository rainbowTableRepository;
 
     @PostMapping("rainbowtable")
-    public ResponseEntity rainbowtable(HttpServletRequest request, @RequestBody HashDto hashDto) {
+    public ResponseEntity<?> rainbowtable(HttpServletRequest request, @RequestBody HashDto hashDto) {
 
         if (!isAdmin(request))
             return forbidden();
@@ -40,7 +40,7 @@ public class AdminController extends BaseController {
     }
 
     @PutMapping("security-config")
-    public ResponseEntity updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response, @RequestBody SecurityRuntimeConfigDto config) {
+    public ResponseEntity<?> updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response, @RequestBody SecurityRuntimeConfigDto config) {
 
         if (!isAdmin(request))
             return forbidden();
@@ -54,7 +54,7 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("security-config")
-    public ResponseEntity updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response) {
 
         var config = new SecurityRuntimeConfigDto(SecurityRuntimeConfig.getInstance());
 
@@ -69,7 +69,7 @@ public class AdminController extends BaseController {
     }
 
     @DeleteMapping("security-config")
-    public ResponseEntity resetSecurityRuntimeConfig(HttpServletRequest request) {
+    public ResponseEntity<?> resetSecurityRuntimeConfig(HttpServletRequest request) {
 
         if (!isAdmin(request))
             return forbidden();

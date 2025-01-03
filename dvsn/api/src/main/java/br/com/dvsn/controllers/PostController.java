@@ -29,7 +29,7 @@ public class PostController extends BaseController {
     public ComentarioRepository comentarioRepository;
 
     @GetMapping("/post")
-    public ResponseEntity buscarPosts(@RequestParam(required = false) String filtro, HttpServletRequest request) {
+    public ResponseEntity<?> buscarPosts(@RequestParam(required = false) String filtro, HttpServletRequest request) {
 
         try {
             var list = new ArrayList<PostDto>();
@@ -53,7 +53,7 @@ public class PostController extends BaseController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image) {
+    public ResponseEntity<?> createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image) {
 
         try {
 
@@ -89,7 +89,7 @@ public class PostController extends BaseController {
     }
 
     @DeleteMapping("post/{id}")
-    public ResponseEntity removerPost(@PathVariable long id) {
+    public ResponseEntity<?> removerPost(@PathVariable long id) {
 
         try {
             comentarioRepository.deleteByPostId(id);

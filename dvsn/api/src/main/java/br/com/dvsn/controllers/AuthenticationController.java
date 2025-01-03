@@ -9,7 +9,6 @@ import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ public class AuthenticationController extends BaseController {
     protected SessaoRepository sessaoRepository;
 
     @PostMapping("criarConta")
-    public ResponseEntity criarConta(@RequestBody UsuarioDto usuarioDto) {
+    public ResponseEntity<?> criarConta(@RequestBody UsuarioDto usuarioDto) {
         try {
 
             if (!StringHelper.isEmail(usuarioDto.getEmail()))
@@ -42,7 +41,7 @@ public class AuthenticationController extends BaseController {
             try {
                 usuarioRepository.adicionar(usuarioDto);
             } catch (Exception ex) {
-                return new ResponseEntity(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+                return internalServerError(ex);
             }
 
             return ResponseEntity.ok().build();
@@ -55,47 +54,46 @@ public class AuthenticationController extends BaseController {
     public ResponseEntity<?> login(@RequestBody UsuarioDto usuarioDto, HttpServletResponse response) {
 
         if (StringHelper.isNullOrEmpty(usuarioDto.getSenha()) || StringHelper.isNullOrEmpty(usuarioDto.getSenha()))
-            return new ResponseEntity("Informe email e senha.", HttpStatus.UNAUTHORIZED);
+            return unauthorized("Informe email e senha.");
 
         try {
 
             var usuario = usuarioRepository.login(usuarioDto);
 
-            if (usuario != null) {
+            if (usuario == null)
+                return unauthorized("Email ou senha inválidos");
 
-                var usuarioLogadoDto = new UsuarioLogadoDto(usuario);
+            var usuarioLogadoDto = new UsuarioLogadoDto(usuario);
 
-                var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+            var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
 
-                if (tipoAutenticacao == TipoAutenticacao.CookieBase64) {
-                    String jsonData = StringHelper.toJson(usuarioLogadoDto);
-                    String cookieValue = StringHelper.toBase64(jsonData);
-                    CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue);
-                } else if (tipoAutenticacao == TipoAutenticacao.Jwt) {
-                    var token = JwtHelper.criarToken(usuario);
-                    usuarioLogadoDto.setToken(token);
-                } else if (tipoAutenticacao == TipoAutenticacao.TokenOpaco) {
-                    var sessao = TokenOpacoHelper.criarSessao(usuario);
-                    sessaoRepository.save(sessao);
-                    usuarioLogadoDto.setToken(sessao.getToken());
-                }
-
-                return new ResponseEntity(usuarioLogadoDto, HttpStatus.OK);
+            if (tipoAutenticacao == TipoAutenticacao.CookieBase64) {
+                String jsonData = StringHelper.toJson(usuarioLogadoDto);
+                String cookieValue = StringHelper.toBase64(jsonData);
+                CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue);
+            } else if (tipoAutenticacao == TipoAutenticacao.Jwt) {
+                var token = JwtHelper.criarToken(usuario);
+                usuarioLogadoDto.setToken(token);
+            } else if (tipoAutenticacao == TipoAutenticacao.TokenOpaco) {
+                var sessao = TokenOpacoHelper.criarSessao(usuario);
+                sessaoRepository.save(sessao);
+                usuarioLogadoDto.setToken(sessao.getToken());
             }
-            return new ResponseEntity("Email ou senha inválidos", HttpStatus.UNAUTHORIZED);
+
+            return ResponseEntity.ok(usuarioLogadoDto);
         } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @GetMapping("logout")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
             CookieHelper.clearCookie(response, Constantes.AUTH_COOKIE_NAME);
             var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
             if (tipoAutenticacao == TipoAutenticacao.TokenOpaco)
                 TokenOpacoHelper.removerSessao(request, sessaoRepository);
-            return new ResponseEntity(HttpStatus.OK);
+            return ResponseEntity.ok().build();
         } catch (Exception ex) {
             return internalServerError(ex);
         }

@@ -25,7 +25,7 @@ public class UsuarioController extends BaseController {
     private PostRepository postRepository;
 
     @GetMapping("usuario")
-    public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
+    public ResponseEntity<?> obterDadosUsuarioLogado(HttpServletRequest request) {
         try {
             var usuario = obterUsuarioLogado(request);
 
@@ -39,21 +39,21 @@ public class UsuarioController extends BaseController {
     }
 
     @GetMapping("usuario/{id}")
-    public ResponseEntity obterDadosUsuario(@PathVariable long id) {
+    public ResponseEntity<?> obterDadosUsuario(@PathVariable long id) {
         try {
             var usuario = usuarioRepository.buscarPorId(id);
 
             if (usuario == null)
                 return badRequest("Usuário não encontrado.");
 
-            return ResponseEntity.ok(new UsuarioDto(usuario));
+            return ResponseEntity.ok(usuario);
         } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @PutMapping("usuario/{id}")
-    public ResponseEntity update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
+    public ResponseEntity<?> update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
         try {
             if (StringHelper.isNullOrEmpty(nome)) {
                 return badRequest("Nome inválido.");
@@ -82,7 +82,7 @@ public class UsuarioController extends BaseController {
     }
 
     @GetMapping("usuarios")
-    public ResponseEntity obterUsuarios(@RequestParam String filtro) {
+    public ResponseEntity<?> obterUsuarios(@RequestParam String filtro) {
 
         try {
 
@@ -95,14 +95,14 @@ public class UsuarioController extends BaseController {
                 list.add(dto);
             }
 
-            return new ResponseEntity(list, HttpStatus.OK);
+            return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @PostMapping("usuario/alterar-senha")
-    public ResponseEntity alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha, @RequestPart(required = false) String confirmacao) {
+    public ResponseEntity<?> alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha, @RequestPart(required = false) String confirmacao) {
         try {
             if (StringHelper.isNullOrEmpty(senha)) {
                 return badRequest("Informe a nova senha.");
