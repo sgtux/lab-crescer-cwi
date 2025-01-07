@@ -2,6 +2,7 @@ package br.com.dvsn.security;
 
 import br.com.dvsn.dtos.SecurityRuntimeConfigDto;
 import br.com.dvsn.enums.TipoAutenticacao;
+import br.com.dvsn.enums.XFrameOptionsHeader;
 
 public final class SecurityRuntimeConfig {
 
@@ -23,9 +24,12 @@ public final class SecurityRuntimeConfig {
 
     private boolean sqlInjectionPreventionEnabled;
 
+    private XFrameOptionsHeader xFrameOptionsHeader;
+
     private SecurityRuntimeConfig() {
         sessionMinutes = 30;
         tipoAutenticacao = TipoAutenticacao.CookieBase64;
+        xFrameOptionsHeader = XFrameOptionsHeader.Empty;
     }
 
     public static SecurityRuntimeConfig getInstance() {
@@ -47,6 +51,7 @@ public final class SecurityRuntimeConfig {
         setSqlInjectionPreventionEnabled(config.isSqlInjectionPreventionEnabled());
         setXssPreventionEnabled(config.isXssPreventionEnabled());
         setXssStoredPreventionEnabled(config.isXssStoredPreventionEnabled());
+        setxFrameOptionsHeader(config.getxFrameOptionsHeader());
     }
 
     public boolean isCookieHttpOnly() {
@@ -111,5 +116,13 @@ public final class SecurityRuntimeConfig {
 
     public void setSqlInjectionPreventionEnabled(boolean sqlInjectionPreventionEnabled) {
         this.sqlInjectionPreventionEnabled = sqlInjectionPreventionEnabled;
+    }
+
+    public XFrameOptionsHeader getxFrameOptionsHeader() {
+        return xFrameOptionsHeader;
+    }
+
+    public void setxFrameOptionsHeader(XFrameOptionsHeader xFrameOptionsHeader) {
+        this.xFrameOptionsHeader = xFrameOptionsHeader;
     }
 }

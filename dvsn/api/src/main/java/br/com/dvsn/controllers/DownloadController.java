@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.File;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,6 +21,10 @@ public class DownloadController extends BaseController {
     public ResponseEntity<?> downloadFileFromLocal(@PathVariable String fileName) {
         try {
             var path = StringHelper.createUploadFilePath(fileName);
+
+            File file = new File(path);
+            if (!file.exists())
+                return notFound(fileName);
 
             final byte[] pdfBytes = Files.readAllBytes(Paths.get(path));
 

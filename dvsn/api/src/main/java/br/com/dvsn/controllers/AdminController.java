@@ -54,7 +54,7 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("security-config")
-    public ResponseEntity<?> updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> getSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response) {
 
         var config = new SecurityRuntimeConfigDto(SecurityRuntimeConfig.getInstance());
 

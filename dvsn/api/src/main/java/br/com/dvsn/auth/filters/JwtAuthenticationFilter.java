@@ -11,13 +11,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends AuthenticationFilter {
 
     @Override
     protected void doFilterInternal(
@@ -26,7 +25,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        if(SecurityRuntimeConfig.getInstance().getTipoAutenticacao() != TipoAutenticacao.Jwt) {
+        if (isFreeEndpoint(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+        if(tipoAutenticacao != TipoAutenticacao.Jwt) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -34,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         var usuario = JwtHelper.verificarToken(request);
 
         if (usuario == null) {
-            filterChain.doFilter(request, response);
+            handleUnauthorized(response, tipoAutenticacao);
             return;
         }
 
