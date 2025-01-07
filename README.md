@@ -30,14 +30,24 @@ docker-compose up
 ```
 Obs.: Caso queira subir apenas o banco de dados, é necessário comentar as demais aplicações no docker-compose.yml.
 
-### 3. Criação do banco de dados.
+### 3. Para acessar as aplicações é necessário configurar no arquivo /etc/hosts (linux).
+
+```
+172.45.45.20   www.crescer.lab
+172.45.45.20   log.crescer.lab
+172.45.45.20   malicious-server.crescer.lab
+172.45.45.20   trailer-viewer.crescer.lab
+```
+
+
+### 4. Criação do banco de dados.
 
 - Entrar na pasta **dvsn** e executar o script:
 ```bash
 $ ./create-database.sh
 ```
 
-### 4. Abrir o VS Code ou IntelliJ e rodar a aplicação.
+### 5. Abrir o VS Code ou IntelliJ e rodar a aplicação.
 Main Class -> RootApplication.java
 
 ## Usuários disponíveis

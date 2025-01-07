@@ -18,6 +18,8 @@ export function SecurityConfig() {
     const [cookieDomain, setCookieDomain] = useState('')
     const [sessionMinutes, setSessionMinutes] = useState(false)
     const [tipoAutenticacao, setTipoAutenticacao] = useState('CookieBase64')
+    const [xFrameOptionsHeader, setXFrameOptionsHeader] = useState('Empty')
+    const [urlIframe, setUrlIframe] = useState(window.location.href)
 
     const dispatch = useDispatch()
 
@@ -32,6 +34,7 @@ export function SecurityConfig() {
             setCookieDomain(res.cookieDomain || '')
             setSessionMinutes(res.sessionMinutes)
             setTipoAutenticacao(res.tipoAutenticacao)
+            setXFrameOptionsHeader(res.xFrameOptionsHeader)
             dispatch(securityConfigChanged(res))
         } catch (err) {
             if (err.toJSON().status === 401) {
@@ -51,7 +54,8 @@ export function SecurityConfig() {
             cookieSecure,
             cookieDomain,
             sessionMinutes: Number(sessionMinutes || 0),
-            tipoAutenticacao
+            tipoAutenticacao,
+            xFrameOptionsHeader
         })
             .then(() => refresh())
             .catch(err => console.log(err))
@@ -104,6 +108,22 @@ export function SecurityConfig() {
                     <option value="TokenOpaco">Token Opaco</option>
                 </select>
             </FieldBox>
+            <GroupField>
+                <legend>HTTP Response Headers</legend>
+                <FieldBox>
+                    <FieldName>X-Frame-Options:</FieldName>
+                    <select value={xFrameOptionsHeader} onChange={e => setXFrameOptionsHeader(e.target.value)}>
+                        <option value="Empty">Vazio</option>
+                        <option value="SameOrigin">Same Origin</option>
+                        <option value="Deny">Deny</option>
+                    </select>
+                </FieldBox>
+                <FieldBox>
+                    <FieldName>Url Iframe:</FieldName>
+                    <TextInput style={{ width: 200 }} value={urlIframe} onChange={e => setUrlIframe(e.target.value)} />
+                </FieldBox>
+                <iframe src={urlIframe} title='TesteIframeOptions' width={300} height={200}></iframe>
+            </GroupField>
             <br /><br />
             <ResetButton onClick={() => reset()}>Restaurar</ResetButton>
             <SaveButton onClick={() => save()}>Salvar</SaveButton>

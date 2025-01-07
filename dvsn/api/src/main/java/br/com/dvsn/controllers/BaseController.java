@@ -69,6 +69,10 @@ public class BaseController {
         return new ResponseErrorDto(erro, HttpStatus.BAD_REQUEST);
     }
 
+    protected ResponseErrorDto notFound(String erro) {
+        return new ResponseErrorDto(erro, HttpStatus.NOT_FOUND);
+    }
+
     protected ResponseErrorDto internalServerError(Exception exception) {
         System.err.println(exception);
         return new ResponseErrorDto("Erro interno.", HttpStatus.INTERNAL_SERVER_ERROR);

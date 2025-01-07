@@ -47,13 +47,14 @@ public class PostController extends BaseController {
             }
 
             return ResponseEntity.ok(list);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(HttpServletRequest request, @RequestPart String text, @RequestPart(required = false) MultipartFile image) {
+    public ResponseEntity<?> createPost(HttpServletRequest request, @RequestPart String text,
+            @RequestPart(required = false) MultipartFile image) {
 
         try {
 
@@ -83,19 +84,28 @@ public class PostController extends BaseController {
             repository.add(post);
 
             return ResponseEntity.ok().build();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
-    @DeleteMapping("post/{id}")
-    public ResponseEntity<?> removerPost(@PathVariable long id) {
+    @RequestMapping("post/{id}")
+    public ResponseEntity<?> removerPost(HttpServletRequest request, @PathVariable long id) {
 
         try {
+            var userId = obterUsuarioLogado(request).getId();
+            var post = repository.buscarPorId(id);
+
+            if (post == null)
+                return notFound("Post não encontrado.");
+
+            if (post.getUsuario().getId() != userId)
+                return forbidden();
+
             comentarioRepository.deleteByPostId(id);
             repository.deletarPorId(id);
             return ResponseEntity.ok().build();
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return internalServerError(ex);
         }
     }

@@ -1,9 +1,11 @@
 package br.com.dvsn.dtos;
 
 import br.com.dvsn.enums.TipoAutenticacao;
+import br.com.dvsn.enums.XFrameOptionsHeader;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 
 public class SecurityRuntimeConfigDto {
+
     private boolean cookieHttpOnly;
 
     private boolean cookieSecure;
@@ -20,6 +22,8 @@ public class SecurityRuntimeConfigDto {
 
     private boolean sqlInjectionPreventionEnabled;
 
+    private XFrameOptionsHeader xFrameOptionsHeader;
+
     public SecurityRuntimeConfigDto() { }
 
     public SecurityRuntimeConfigDto(SecurityRuntimeConfig config) {
@@ -31,6 +35,7 @@ public class SecurityRuntimeConfigDto {
         xssPreventionEnabled = config.isXssPreventionEnabled();
         xssStoredPreventionEnabled = config.isXssStoredPreventionEnabled();
         sqlInjectionPreventionEnabled = config.isSqlInjectionPreventionEnabled();
+        xFrameOptionsHeader = config.getxFrameOptionsHeader();
     }
 
     public boolean isCookieHttpOnly() {
@@ -95,5 +100,13 @@ public class SecurityRuntimeConfigDto {
 
     public void setSqlInjectionPreventionEnabled(boolean sqlInjectionPreventionEnabled) {
         this.sqlInjectionPreventionEnabled = sqlInjectionPreventionEnabled;
+    }
+
+    public XFrameOptionsHeader getxFrameOptionsHeader() {
+        return xFrameOptionsHeader;
+    }
+
+    public void setxFrameOptionsHeader(XFrameOptionsHeader xFrameOptionsHeader) {
+        this.xFrameOptionsHeader = xFrameOptionsHeader;
     }
 }

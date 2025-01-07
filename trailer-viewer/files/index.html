@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <title>Trailer Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+
+        #toolbar {
+            height: 80px;
+            background-color: #888;
+            font-size: 68px;
+            color: #ddd;
+            padding-left: 16px;
+            cursor: pointer;
+        }
+
+        #trailer-name {
+            text-align: center;
+            font-size: 32;
+            color: #888;
+            margin-top: 100px;
+        }
+
+        #video-player{
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toolbar" onclick="location.href='/'">
+        Trailer Viewer
+    </div>
+    <ul>
+        <li><a href="?trailer=nosferatu">Nosferatu</a></li>
+        <li><a href="?trailer=dragonball">Dragon Ball Daima</a></li>
+        <li><a href="?trailer=superman">Superman</a></li>
+    </ul>
+    <div id="trailer-name"></div>
+    <video style="display: none;" controls width="600" id="video-player"></video>
+    <script>
+        window.onload = () => {
+            if (location.search && location.search.includes('=')) {
+                const trailerName = location.search.split('=')[1]
+                const trailerNameElem = document.getElementById('trailer-name')
+                const videoPlayerElem = document.getElementById('video-player')
+                const videoPlayerSrcElem = document.getElementById('video-player-src')
+
+                switch (trailerName) {
+                    case 'nosferatu':
+                        trailerNameElem.innerText = 'Nosferatu'
+                        videoPlayerElem.innerHTML = '<source src="nosferatu-trailer.mp4" />'
+                        break
+                    case 'dragonball':
+                        trailerNameElem.innerText = 'Dragon Ball Daima'
+                        videoPlayerElem.innerHTML = '<source src="dragonball-daima.mp4" />'
+                        break
+                    case 'superman':
+                        trailerNameElem.innerText = 'Superman'
+                        videoPlayerElem.innerHTML = '<source src="superman-trailer.mp4" />'
+                        break
+                }
+
+                videoPlayerElem.style.display = 'block'
+            }
+        }
+    </script>
+</body>
+
+</html>

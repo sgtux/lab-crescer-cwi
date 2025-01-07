@@ -33,7 +33,7 @@ public class UsuarioController extends BaseController {
                 return badRequest("Usuário não encontrado.");
 
             return ResponseEntity.ok(usuario);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
@@ -53,7 +53,8 @@ public class UsuarioController extends BaseController {
     }
 
     @PutMapping("usuario/{id}")
-    public ResponseEntity<?> update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
+    public ResponseEntity<?> update(@PathVariable long id, @RequestPart(required = false) String nome,
+            @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
         try {
             if (StringHelper.isNullOrEmpty(nome)) {
                 return badRequest("Nome inválido.");
@@ -84,25 +85,21 @@ public class UsuarioController extends BaseController {
     @GetMapping("usuarios")
     public ResponseEntity<?> obterUsuarios(@RequestParam String filtro) {
 
-        try {
+        List<UsuarioExibicaoDto> list = new ArrayList<>();
 
-            List<UsuarioExibicaoDto> list = new ArrayList<>();
-
-            for (var item : usuarioRepository.buscar(filtro)) {
-                var dto = new UsuarioExibicaoDto(item);
-                var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
-                dto.setQuantidadePosts(quantidatePostsUsuario);
-                list.add(dto);
-            }
-
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception ex) {
-            return internalServerError(ex);
+        for (var item : usuarioRepository.buscar(filtro)) {
+            var dto = new UsuarioExibicaoDto(item);
+            var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
+            dto.setQuantidadePosts(quantidatePostsUsuario);
+            list.add(dto);
         }
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @PostMapping("usuario/alterar-senha")
-    public ResponseEntity<?> alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha, @RequestPart(required = false) String confirmacao) {
+    public ResponseEntity<?> alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha,
+            @RequestPart(required = false) String confirmacao) {
         try {
             if (StringHelper.isNullOrEmpty(senha)) {
                 return badRequest("Informe a nova senha.");

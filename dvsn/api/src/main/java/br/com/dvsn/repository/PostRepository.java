@@ -36,10 +36,12 @@ public class PostRepository {
         var sqlString = "SELECT count(*) FROM Post where usuario_id = :userId";
         Query query = entityManager.createNativeQuery(sqlString, Long.class)
                 .setParameter("userId", userId);
-        return ((Number)query.getSingleResult()).longValue();
+        return ((Number) query.getSingleResult()).longValue();
     }
 
     public List<Post> buscar(String filtro) {
+        if (filtro == null)
+            filtro = "";
         var jpqlString = "SELECT p FROM Post p join fetch p.usuario left join fetch p.comentarios c where p.texto like CONCAT('%', :filtro,'%') order by p.criadoEm desc, c.criadoEm asc";
         return entityManager.createQuery(jpqlString, Post.class)
                 .setParameter("filtro", filtro)

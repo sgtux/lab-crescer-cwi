@@ -14,28 +14,26 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
-public class CookieBase64AuthenticationFilter extends OncePerRequestFilter {
-
-    private static final Logger logger = LogManager.getLogger(CookieBase64AuthenticationFilter.class);
+public class CookieBase64AuthenticationFilter extends AuthenticationFilter {
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
-        logger.info("REQUEST_URL: " + request.getRequestURL());
+        if (isFreeEndpoint(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        if(SecurityRuntimeConfig.getInstance().getTipoAutenticacao() != TipoAutenticacao.CookieBase64) {
+        var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+        if (tipoAutenticacao != TipoAutenticacao.CookieBase64) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,19 +41,15 @@ public class CookieBase64AuthenticationFilter extends OncePerRequestFilter {
         var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
 
         if (cookie == null) {
-            filterChain.doFilter(request, response);
+            handleUnauthorized(response, tipoAutenticacao);
             return;
         }
 
-        try {
-            var userJson = StringHelper.fromBase64(cookie);
-            var usuario = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
-            var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(), new ArrayList<>());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception ex) {
-            System.out.println(ex);
-        } finally {
-            filterChain.doFilter(request, response);
-        }
+        var userJson = StringHelper.fromBase64(cookie);
+        var usuario = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
+        var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(),
+                new ArrayList<>());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        filterChain.doFilter(request, response);
     }
 }
