@@ -24,7 +24,10 @@ public class SecurityRuntimeConfigDto {
 
     private XFrameOptionsHeader xFrameOptionsHeader;
 
-    public SecurityRuntimeConfigDto() { }
+    private String contentSecurityPolicy;
+
+    public SecurityRuntimeConfigDto() {
+    }
 
     public SecurityRuntimeConfigDto(SecurityRuntimeConfig config) {
         cookieHttpOnly = config.isCookieHttpOnly();
@@ -36,6 +39,7 @@ public class SecurityRuntimeConfigDto {
         xssStoredPreventionEnabled = config.isXssStoredPreventionEnabled();
         sqlInjectionPreventionEnabled = config.isSqlInjectionPreventionEnabled();
         xFrameOptionsHeader = config.getxFrameOptionsHeader();
+        contentSecurityPolicy = config.getContentSecurityPolicy();
     }
 
     public boolean isCookieHttpOnly() {
@@ -108,5 +112,13 @@ public class SecurityRuntimeConfigDto {
 
     public void setxFrameOptionsHeader(XFrameOptionsHeader xFrameOptionsHeader) {
         this.xFrameOptionsHeader = xFrameOptionsHeader;
+    }
+
+    public String getContentSecurityPolicy() {
+        return contentSecurityPolicy;
+    }
+
+    public void setContentSecurityPolicy(String contentSecurityPolicy) {
+        this.contentSecurityPolicy = contentSecurityPolicy;
     }
 }

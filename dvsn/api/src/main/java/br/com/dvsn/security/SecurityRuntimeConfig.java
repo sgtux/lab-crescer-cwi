@@ -26,6 +26,8 @@ public final class SecurityRuntimeConfig {
 
     private XFrameOptionsHeader xFrameOptionsHeader;
 
+    private String contentSecurityPolicy;
+
     private SecurityRuntimeConfig() {
         sessionMinutes = 30;
         tipoAutenticacao = TipoAutenticacao.CookieBase64;
@@ -52,6 +54,7 @@ public final class SecurityRuntimeConfig {
         setXssPreventionEnabled(config.isXssPreventionEnabled());
         setXssStoredPreventionEnabled(config.isXssStoredPreventionEnabled());
         setxFrameOptionsHeader(config.getxFrameOptionsHeader());
+        setContentSecurityPolicy(config.getContentSecurityPolicy());
     }
 
     public boolean isCookieHttpOnly() {
@@ -124,5 +127,13 @@ public final class SecurityRuntimeConfig {
 
     public void setxFrameOptionsHeader(XFrameOptionsHeader xFrameOptionsHeader) {
         this.xFrameOptionsHeader = xFrameOptionsHeader;
+    }
+
+    public String getContentSecurityPolicy() {
+        return contentSecurityPolicy;
+    }
+
+    public void setContentSecurityPolicy(String contentSecurityPolicy) {
+        this.contentSecurityPolicy = contentSecurityPolicy;
     }
 }

@@ -89,7 +89,7 @@ public class PostController extends BaseController {
         }
     }
 
-    @RequestMapping("post/{id}")
+    @RequestMapping("removerPost/{id}")
     public ResponseEntity<?> removerPost(HttpServletRequest request, @PathVariable long id) {
 
         try {
