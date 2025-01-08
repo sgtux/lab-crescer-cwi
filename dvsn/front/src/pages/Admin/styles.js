@@ -2,7 +2,8 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
     margin: 0 auto;
-    width: 600px;
+    min-width: 600px;
+    max-width: 800px;
     margin-top: 60px;
     padding: 20px;
     border-radius: 20px;
@@ -39,4 +40,9 @@ export const GroupField = styled.fieldset`
 
 export const FieldBox = styled.div`
     margin-top: 10px;
+`
+
+export const Hr = styled.hr`
+    margin: 20px;
+    color: #eee;
 `

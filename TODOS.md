@@ -3,17 +3,18 @@
 - <s>Prevenção de SQL Injection configurável.</s>
 - <s>Adicionar XSS em SVG e CSS.</s>
 - <s>Validar tipos de autenticação e adicionar Token Opaco.</s>
-- Adicionar cabeçalho X-Frame-Options configurável.
-- Adicionar cabeçalho CSP configurável.
+- <s>Adicionar cabeçalho X-Frame-Options configurável.</s>
+- <s>Adicionar cabeçalho CSP configurável.</s>
+- Adicionar cabeçalho CORS configurável.
+- CSRF (Cross-Site Request Forgery)
+- Referer-Based Validation
+- CSS Injection
+- XML External Entity Attack
 - Adicionar certificados SSL.
 - SameSite cookies
-- Referer-Based Validation
-- CSRF (Cross-Site Request Forgery)
 - Gerenciamento de senhas
-- XML External Entity Attack
 - Brute force Attacks
 - Password Storage and Password Policy
-- Security Headers.
 - TLS Certificate Misconfiguration
 - Symmetric and Asymmetric Ciphers
 - Server-Side Request Forgery

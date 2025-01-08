@@ -40,16 +40,13 @@ export const SearchBtn = styled.button`
 `
 
 export const TextInput = styled.input`
-    border: 1px solid #dddfe2;
-    color: #1d2129;
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 12px;
-    height: 50px;
-    line-height: 16px;
+    border: 1px solid #bbb;
+    color: #555;
+    font-family: Helvetica, Arial, sans-serif;    
+    height: 30px;
     vertical-align: middle;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 20px;
-    margin-bottom: 20px;
     padding-left: 6px;
     width: 100%;
 `

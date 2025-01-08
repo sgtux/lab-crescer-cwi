@@ -6,10 +6,14 @@ import br.com.dvsn.entities.RainbowTableHash;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.helpers.Constantes;
 import br.com.dvsn.helpers.CookieHelper;
+import br.com.dvsn.helpers.StringHelper;
 import br.com.dvsn.repository.RainbowTableRepository;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,8 @@ public class AdminController extends BaseController {
 
     @Autowired
     private RainbowTableRepository rainbowTableRepository;
+
+    private static final Logger logger = LogManager.getLogger(AdminController.class);
 
     @PostMapping("rainbowtable")
     public ResponseEntity<?> rainbowtable(HttpServletRequest request, @RequestBody HashDto hashDto) {
@@ -40,13 +46,21 @@ public class AdminController extends BaseController {
     }
 
     @PutMapping("security-config")
-    public ResponseEntity<?> updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response, @RequestBody SecurityRuntimeConfigDto config) {
+    public ResponseEntity<?> updateSecurityRuntimeConfig(HttpServletRequest request, HttpServletResponse response,
+            @RequestBody SecurityRuntimeConfigDto config) {
 
         if (!isAdmin(request))
             return forbidden();
 
-        if(!config.getCookieDomain().equals(SecurityRuntimeConfig.getInstance().getCookieDomain()))
+        if (!config.getCookieDomain().equals(SecurityRuntimeConfig.getInstance().getCookieDomain()))
             CookieHelper.clearCookie(response, Constantes.AUTH_COOKIE_NAME);
+
+        try {
+            logger.info("security-config");
+            logger.info(StringHelper.toJson(config));
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+        }
 
         SecurityRuntimeConfig.getInstance().update(config);
 
@@ -63,7 +77,6 @@ public class AdminController extends BaseController {
             if (cookie != null)
                 CookieHelper.clearCookie(response, Constantes.AUTH_COOKIE_NAME);
         }
-
 
         return ResponseEntity.ok(config);
     }

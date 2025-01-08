@@ -1,7 +1,6 @@
 package br.com.dvsn.security;
 
 import br.com.dvsn.auth.filters.CookieBase64AuthenticationFilter;
-import br.com.dvsn.auth.filters.HttpResponseHeaderFilter;
 import br.com.dvsn.auth.filters.JwtAuthenticationFilter;
 import br.com.dvsn.auth.filters.TokenOpacoAuthenticationFilter;
 import br.com.dvsn.handlers.ExceptionHandlerFilter;
