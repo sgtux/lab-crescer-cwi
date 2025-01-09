@@ -8,6 +8,8 @@ const getUserData = () => axios.get(`/usuario/${getUserId()}`, storageService.ge
 
 const getUserLogado = () => axios.get('/usuario', storageService.getAuthHeaders()).then(p => p.data)
 
+const getCsrfToken = () => axios.get('/usuario/alterar-senha-csrf-token', storageService.getAuthHeaders()).then(p => p.data)
+
 const buscar = filtro => axios.get(`/usuarios?filtro=${encodeURI(filtro) || ''}`, storageService.getAuthHeaders()).then(p => p.data)
 
 const login = (email, senha) => axios.post('/auth/login', { email, senha }, storageService.getAuthHeaders()).then(p => p.data)
@@ -22,5 +24,6 @@ export const usuarioService = {
     login,
     logout,
     create,
-    getUserLogado
+    getUserLogado,
+    getCsrfToken
 }

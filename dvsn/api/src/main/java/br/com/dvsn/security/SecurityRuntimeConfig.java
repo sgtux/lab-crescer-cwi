@@ -27,6 +27,8 @@ public final class SecurityRuntimeConfig {
 
     private boolean sqlInjectionPreventionEnabled;
 
+    private boolean csrfTokenEnabled;
+
     private XFrameOptionsHeader xFrameOptionsHeader;
 
     private String contentSecurityPolicy;
@@ -57,6 +59,7 @@ public final class SecurityRuntimeConfig {
         setSessionMinutes(config.getSessionMinutes());
         setTipoAutenticacao(config.getTipoAutenticacao());
         setSqlInjectionPreventionEnabled(config.isSqlInjectionPreventionEnabled());
+        setCsrfTokenEnabled(config.isCsrfTokenEnabled());
         setXssPreventionEnabled(config.isXssPreventionEnabled());
         setXssStoredPreventionEnabled(config.isXssStoredPreventionEnabled());
         setxFrameOptionsHeader(config.getxFrameOptionsHeader());
@@ -135,6 +138,14 @@ public final class SecurityRuntimeConfig {
 
     public void setSqlInjectionPreventionEnabled(boolean sqlInjectionPreventionEnabled) {
         this.sqlInjectionPreventionEnabled = sqlInjectionPreventionEnabled;
+    }
+
+    public boolean isCsrfTokenEnabled() {
+        return this.csrfTokenEnabled;
+    }
+
+    public void setCsrfTokenEnabled(boolean csrfTokenEnabled) {
+        this.csrfTokenEnabled = csrfTokenEnabled;
     }
 
     public XFrameOptionsHeader getxFrameOptionsHeader() {

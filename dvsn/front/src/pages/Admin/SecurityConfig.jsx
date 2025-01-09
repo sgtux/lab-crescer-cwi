@@ -15,6 +15,7 @@ export function SecurityConfig() {
     const [xssPreventionEnabled, setXssPreventionEnabled] = useState(false)
     const [xssStoredPreventionEnabled, setXssStoredPreventionEnabled] = useState(false)
     const [sqlInjectionPreventionEnabled, setSqlInjectionPreventionEnabled] = useState(false)
+    const [csrfTokenEnabled, setCsrfTokenEnabled] = useState(false)
     const [cookieHttpOnly, setCookieHttpOnly] = useState(false)
     const [cookieSecure, setCookieSecure] = useState(false)
     const [cookieDomain, setCookieDomain] = useState('')
@@ -34,6 +35,7 @@ export function SecurityConfig() {
             setXssPreventionEnabled(res.xssPreventionEnabled)
             setXssStoredPreventionEnabled(res.xssStoredPreventionEnabled)
             setSqlInjectionPreventionEnabled(res.sqlInjectionPreventionEnabled)
+            setCsrfTokenEnabled(res.csrfTokenEnabled)
             setCookieHttpOnly(res.cookieHttpOnly)
             setCookieSecure(res.cookieSecure)
             setCookieDomain(res.cookieDomain || '')
@@ -63,6 +65,7 @@ export function SecurityConfig() {
                 xssPreventionEnabled,
                 xssStoredPreventionEnabled,
                 sqlInjectionPreventionEnabled,
+                csrfTokenEnabled,
                 cookieHttpOnly,
                 cookieSecure,
                 cookieDomain,
@@ -99,7 +102,7 @@ export function SecurityConfig() {
     return (
         <Container>
             <GroupField>
-                <legend>Injections</legend>
+                <legend>Críticas</legend>
                 <FieldBox>
                     <FieldName>Previnir XSS:</FieldName>
                     <input type="checkbox" checked={xssPreventionEnabled} onChange={e => setXssPreventionEnabled(e.target.checked)} />
@@ -111,6 +114,10 @@ export function SecurityConfig() {
                 <FieldBox>
                     <FieldName>Previnir SQL Injection:</FieldName>
                     <input type="checkbox" checked={sqlInjectionPreventionEnabled} onChange={e => setSqlInjectionPreventionEnabled(e.target.checked)} />
+                </FieldBox>
+                <FieldBox>
+                    <FieldName>Utilizar Csrf Token:</FieldName>
+                    <input type="checkbox" checked={csrfTokenEnabled} onChange={e => setCsrfTokenEnabled(e.target.checked)} />
                 </FieldBox>
             </GroupField>
             <GroupField>
