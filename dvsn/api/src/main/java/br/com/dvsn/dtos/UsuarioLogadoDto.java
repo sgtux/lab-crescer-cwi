@@ -1,5 +1,7 @@
 package br.com.dvsn.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.dvsn.entities.Usuario;
 
 public class UsuarioLogadoDto {
@@ -15,8 +17,6 @@ public class UsuarioLogadoDto {
     private String foto;
 
     private long funcao;
-
-    private String nomeCompleto;
 
     private String token;
 
@@ -49,6 +49,11 @@ public class UsuarioLogadoDto {
 
     public String getNomeCompleto() {
         return String.format("%s %s", nome, sobrenome);
+    }
+
+    @JsonIgnore
+    public void setNomeCompleto(String nomeCompleto) {
+
     }
 
     public String getSobrenome() {

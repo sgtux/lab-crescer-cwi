@@ -4,7 +4,13 @@ import br.com.dvsn.dtos.UsuarioDto;
 import br.com.dvsn.dtos.UsuarioExibicaoDto;
 import br.com.dvsn.helpers.StringHelper;
 import br.com.dvsn.repository.PostRepository;
+import br.com.dvsn.security.CsrfToken;
+import br.com.dvsn.security.CsrfTokenCache;
+import br.com.dvsn.security.SecurityRuntimeConfig;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +31,7 @@ public class UsuarioController extends BaseController {
     private PostRepository postRepository;
 
     @GetMapping("usuario")
-    public ResponseEntity obterDadosUsuarioLogado(HttpServletRequest request) {
+    public ResponseEntity<?> obterDadosUsuarioLogado(HttpServletRequest request) {
         try {
             var usuario = obterUsuarioLogado(request);
 
@@ -33,27 +39,28 @@ public class UsuarioController extends BaseController {
                 return badRequest("Usuário não encontrado.");
 
             return ResponseEntity.ok(usuario);
-        }catch(Exception ex) {
+        } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @GetMapping("usuario/{id}")
-    public ResponseEntity obterDadosUsuario(@PathVariable long id) {
+    public ResponseEntity<?> obterDadosUsuario(@PathVariable long id) {
         try {
             var usuario = usuarioRepository.buscarPorId(id);
 
             if (usuario == null)
                 return badRequest("Usuário não encontrado.");
 
-            return ResponseEntity.ok(new UsuarioDto(usuario));
+            return ResponseEntity.ok(usuario);
         } catch (Exception ex) {
             return internalServerError(ex);
         }
     }
 
     @PutMapping("usuario/{id}")
-    public ResponseEntity update(@PathVariable long id, @RequestPart(required = false) String nome, @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
+    public ResponseEntity<?> update(@PathVariable long id, @RequestPart(required = false) String nome,
+            @RequestPart(required = false) String sobrenome, @RequestPart(required = false) MultipartFile imagem) {
         try {
             if (StringHelper.isNullOrEmpty(nome)) {
                 return badRequest("Nome inválido.");
@@ -82,27 +89,37 @@ public class UsuarioController extends BaseController {
     }
 
     @GetMapping("usuarios")
-    public ResponseEntity obterUsuarios(@RequestParam String filtro) {
+    public ResponseEntity<?> obterUsuarios(@RequestParam String filtro) {
 
-        try {
+        List<UsuarioExibicaoDto> list = new ArrayList<>();
 
-            List<UsuarioExibicaoDto> list = new ArrayList<>();
-
-            for (var item : usuarioRepository.buscar(filtro)) {
-                var dto = new UsuarioExibicaoDto(item);
-                var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
-                dto.setQuantidadePosts(quantidatePostsUsuario);
-                list.add(dto);
-            }
-
-            return new ResponseEntity(list, HttpStatus.OK);
-        } catch (Exception ex) {
-            return internalServerError(ex);
+        for (var item : usuarioRepository.buscar(filtro)) {
+            var dto = new UsuarioExibicaoDto(item);
+            var quantidatePostsUsuario = postRepository.quantidadePostPorUsuario(item.getId());
+            dto.setQuantidadePosts(quantidatePostsUsuario);
+            list.add(dto);
         }
+
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("usuario/alterar-senha-csrf-token")
+    public ResponseEntity<?> obterTokenCsrf(HttpServletRequest request, HttpServletResponse response) {
+        var idUsuario = obterUsuarioLogado(request).getId();
+
+        var token = new CsrfToken(idUsuario);
+        CsrfTokenCache.addToken(token);
+        var cookie = new Cookie("_csrf", token.getToken());
+        cookie.setMaxAge(SecurityRuntimeConfig.getInstance().getSessionMinutes() * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("usuario/alterar-senha")
-    public ResponseEntity alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha, @RequestPart(required = false) String confirmacao) {
+    public ResponseEntity<?> alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha,
+            @RequestPart(required = false) String confirmacao, @RequestPart(required = false) String token) {
         try {
             if (StringHelper.isNullOrEmpty(senha)) {
                 return badRequest("Informe a nova senha.");
@@ -113,6 +130,16 @@ public class UsuarioController extends BaseController {
             }
 
             var idUsuario = obterUsuarioLogado(request).getId();
+
+            if (SecurityRuntimeConfig.getInstance().isCsrfTokenEnabled()) {
+
+                if (StringHelper.isNullOrEmpty(token))
+                    return badRequest("Informe o csrf token.");
+
+                var tokenCache = CsrfTokenCache.getToken(token);
+                if (tokenCache == null || tokenCache.getUserId() != idUsuario)
+                    return badRequest("Token informado é inválido.");
+            }
 
             usuarioRepository.alterarSenha(idUsuario, senha);
 

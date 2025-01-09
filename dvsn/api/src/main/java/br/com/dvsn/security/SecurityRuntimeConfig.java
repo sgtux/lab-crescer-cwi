@@ -1,7 +1,9 @@
 package br.com.dvsn.security;
 
 import br.com.dvsn.dtos.SecurityRuntimeConfigDto;
+import br.com.dvsn.enums.CookieSameSite;
 import br.com.dvsn.enums.TipoAutenticacao;
+import br.com.dvsn.enums.XFrameOptionsHeader;
 
 public final class SecurityRuntimeConfig {
 
@@ -13,6 +15,8 @@ public final class SecurityRuntimeConfig {
 
     private String cookieDomain;
 
+    private CookieSameSite cookieSameSite;
+
     private int sessionMinutes;
 
     private TipoAutenticacao tipoAutenticacao;
@@ -23,9 +27,19 @@ public final class SecurityRuntimeConfig {
 
     private boolean sqlInjectionPreventionEnabled;
 
+    private boolean csrfTokenEnabled;
+
+    private XFrameOptionsHeader xFrameOptionsHeader;
+
+    private String contentSecurityPolicy;
+
+    private String cors;
+
     private SecurityRuntimeConfig() {
         sessionMinutes = 30;
         tipoAutenticacao = TipoAutenticacao.CookieBase64;
+        xFrameOptionsHeader = XFrameOptionsHeader.Empty;
+        cookieSameSite = CookieSameSite.Empty;
     }
 
     public static SecurityRuntimeConfig getInstance() {
@@ -45,8 +59,13 @@ public final class SecurityRuntimeConfig {
         setSessionMinutes(config.getSessionMinutes());
         setTipoAutenticacao(config.getTipoAutenticacao());
         setSqlInjectionPreventionEnabled(config.isSqlInjectionPreventionEnabled());
+        setCsrfTokenEnabled(config.isCsrfTokenEnabled());
         setXssPreventionEnabled(config.isXssPreventionEnabled());
         setXssStoredPreventionEnabled(config.isXssStoredPreventionEnabled());
+        setxFrameOptionsHeader(config.getxFrameOptionsHeader());
+        setContentSecurityPolicy(config.getContentSecurityPolicy());
+        setCookieSameSite(config.getCookieSameSite());
+        setCors(config.getCors());
     }
 
     public boolean isCookieHttpOnly() {
@@ -71,6 +90,14 @@ public final class SecurityRuntimeConfig {
 
     public void setCookieDomain(String cookieDomain) {
         this.cookieDomain = cookieDomain;
+    }
+
+    public CookieSameSite getCookieSameSite() {
+        return cookieSameSite;
+    }
+
+    public void setCookieSameSite(CookieSameSite cookieSameSite) {
+        this.cookieSameSite = cookieSameSite;
     }
 
     public int getSessionMinutes() {
@@ -111,5 +138,37 @@ public final class SecurityRuntimeConfig {
 
     public void setSqlInjectionPreventionEnabled(boolean sqlInjectionPreventionEnabled) {
         this.sqlInjectionPreventionEnabled = sqlInjectionPreventionEnabled;
+    }
+
+    public boolean isCsrfTokenEnabled() {
+        return this.csrfTokenEnabled;
+    }
+
+    public void setCsrfTokenEnabled(boolean csrfTokenEnabled) {
+        this.csrfTokenEnabled = csrfTokenEnabled;
+    }
+
+    public XFrameOptionsHeader getxFrameOptionsHeader() {
+        return xFrameOptionsHeader;
+    }
+
+    public void setxFrameOptionsHeader(XFrameOptionsHeader xFrameOptionsHeader) {
+        this.xFrameOptionsHeader = xFrameOptionsHeader;
+    }
+
+    public String getContentSecurityPolicy() {
+        return contentSecurityPolicy;
+    }
+
+    public void setContentSecurityPolicy(String contentSecurityPolicy) {
+        this.contentSecurityPolicy = contentSecurityPolicy;
+    }
+
+    public String getCors() {
+        return this.cors;
+    }
+
+    public void setCors(String cors) {
+        this.cors = cors;
     }
 }

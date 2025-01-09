@@ -14,13 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
-public class TokenOpacoAuthenticationFilter extends OncePerRequestFilter {
+public class TokenOpacoAuthenticationFilter extends AuthenticationFilter {
 
     @Autowired
     private SessaoRepository sessaoRepository;
@@ -32,10 +31,15 @@ public class TokenOpacoAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
+            FilterChain filterChain) throws ServletException, IOException {
 
-        if (SecurityRuntimeConfig.getInstance().getTipoAutenticacao() != TipoAutenticacao.TokenOpaco) {
+        if (isFreeEndpoint(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
+        if (tipoAutenticacao != TipoAutenticacao.TokenOpaco) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,13 +47,14 @@ public class TokenOpacoAuthenticationFilter extends OncePerRequestFilter {
         var sessao = TokenOpacoHelper.verificarSessao(request, sessaoRepository);
 
         if (sessao == null) {
-            filterChain.doFilter(request, response);
+            handleUnauthorized(response, tipoAutenticacao);
             return;
         }
 
         var usuario = usuarioRepository.buscarPorId(sessao.getUsuarioId());
 
-        var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(), new ArrayList<>());
+        var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(),
+                new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }

@@ -1,14 +1,16 @@
 package br.com.dvsn.controllers;
 
-import br.com.dvsn.dtos.ResponseErrorDto;
 import br.com.dvsn.dtos.UsuarioLogadoDto;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.helpers.*;
 import br.com.dvsn.repository.SessaoRepository;
 import br.com.dvsn.repository.UsuarioRepository;
 import br.com.dvsn.security.SecurityRuntimeConfig;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,32 +26,28 @@ public class BaseController {
     protected UsuarioLogadoDto obterUsuarioLogado(HttpServletRequest request) {
 
         var tipoAutenticacao = SecurityRuntimeConfig.getInstance().getTipoAutenticacao();
-        if(tipoAutenticacao == TipoAutenticacao.Jwt) {
+        if (tipoAutenticacao == TipoAutenticacao.Jwt) {
             var usuario = JwtHelper.verificarToken(request);
             return new UsuarioLogadoDto(usuario);
         }
 
-        if(tipoAutenticacao == TipoAutenticacao.CookieBase64) {
+        if (tipoAutenticacao == TipoAutenticacao.CookieBase64) {
             var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
 
             if (cookie != null) {
-                try {
-                    var userJson = StringHelper.fromBase64(cookie);
-                    var usuarioLogado = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
+                var userJson = StringHelper.fromBase64(cookie);
+                var usuarioLogado = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
 
-                    var usuarioDb = usuarioRepository.buscarPorId(usuarioLogado.getId());
+                var usuarioDb = usuarioRepository.buscarPorId(usuarioLogado.getId());
 
-                    if (usuarioDb != null)
-                        usuarioLogado.setFoto(usuarioDb.getFoto());
+                if (usuarioDb != null)
+                    usuarioLogado.setFoto(usuarioDb.getFoto());
 
-                    return usuarioLogado;
-                } catch (JsonProcessingException ex) {
-                    System.err.println(ex);
-                }
+                return usuarioLogado;
             }
         }
 
-        if(tipoAutenticacao == TipoAutenticacao.TokenOpaco) {
+        if (tipoAutenticacao == TipoAutenticacao.TokenOpaco) {
             var sessao = TokenOpacoHelper.verificarSessao(request, sessaoRepository);
             var usuario = usuarioRepository.buscarPorId(sessao.getUsuarioId());
             return new UsuarioLogadoDto(usuario);
@@ -63,16 +61,30 @@ public class BaseController {
         return usuario.getFuncao() == 1;
     }
 
-    protected ResponseEntity<ResponseErrorDto> forbidden() {
-        return new ResponseEntity("Acesso proibido.", HttpStatus.FORBIDDEN);
+    protected ResponseEntity<?> unauthorized(String message) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse(message));
     }
 
-    protected ResponseEntity<ResponseErrorDto> badRequest(String erro) {
-        return new ResponseEntity(new ResponseErrorDto(erro), HttpStatus.BAD_REQUEST);
+    protected ResponseEntity<?> forbidden() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("Acesso proibido."));
     }
 
-    protected ResponseEntity<ResponseErrorDto> internalServerError(Exception exception) {
+    protected ResponseEntity<?> badRequest(String erro) {
+        return ResponseEntity.badRequest().body(errorResponse(erro));
+    }
+
+    protected ResponseEntity<?> notFound(String erro) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse(erro));
+    }
+
+    protected ResponseEntity<?> internalServerError(Exception exception) {
         System.err.println(exception);
-        return new ResponseEntity(new ResponseErrorDto("Erro interno."), HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse("Erro interno."));
+    }
+
+    private Object errorResponse(String erro) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("erro", erro);
+        return errorResponse;
     }
 }

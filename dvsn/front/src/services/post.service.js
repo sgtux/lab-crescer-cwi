@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-import {storageService} from './storage.service'
+import { storageService } from './storage.service'
 
 const obterTodos = filtro => axios.get(`/post?filtro=${filtro || ''}`, storageService.getAuthHeaders()).then(p => p.data)
 
-const deletarPost = id => axios.delete(`/post/${id}`, storageService.getAuthHeaders())
+const deletarPost = id => axios.delete(`/removerPost/${id}`, storageService.getAuthHeaders())
 
 const adicionarComentario = comentario => axios.post('/comentario', comentario, storageService.getAuthHeaders())
 

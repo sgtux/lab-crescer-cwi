@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HelloController extends BaseController {
 
     @GetMapping(value = "/hello", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity hello(HttpServletRequest request, @RequestParam(required = false) String nome) {
+    public ResponseEntity<?> hello(HttpServletRequest request, @RequestParam(required = false) String nome) {
 
         if (StringHelper.isNullOrEmpty(nome)){
             HttpHeaders headers = new HttpHeaders();

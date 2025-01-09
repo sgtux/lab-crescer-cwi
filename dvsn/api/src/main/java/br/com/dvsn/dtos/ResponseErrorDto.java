@@ -1,10 +1,14 @@
 package br.com.dvsn.dtos;
 
-public class ResponseErrorDto {
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+
+public class ResponseErrorDto extends ResponseEntity<String> {
 
     private String erro;
 
-    public ResponseErrorDto(String erro) {
+    public ResponseErrorDto(String erro, HttpStatusCode httpStatusCode) {
+        super(httpStatusCode);
         this.erro = erro;
     }
 

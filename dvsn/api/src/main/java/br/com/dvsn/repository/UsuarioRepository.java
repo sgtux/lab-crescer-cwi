@@ -29,13 +29,21 @@ public class UsuarioRepository {
     public List<Usuario> buscar(String filtro) {
         var config = SecurityRuntimeConfig.getInstance();
         Query query;
-        if(config.isSqlInjectionPreventionEnabled())
-            query = entityManager.createNativeQuery("select * from usuario u where concat(nome, sobrenome) like :filtro", Usuario.class)
+        if (config.isSqlInjectionPreventionEnabled())
+            query = entityManager
+                    .createNativeQuery("select * from usuario u where concat(nome, sobrenome) like :filtro",
+                            Usuario.class)
                     .setParameter("filtro", "%" + filtro + "%");
-         else
-            query = entityManager.createNativeQuery("select * from usuario u where concat(nome, sobrenome) like '%" + filtro + "%'", Usuario.class);
+        else
+            query = entityManager.createNativeQuery(
+                    "select * from usuario u where concat(nome, sobrenome) like '%" + filtro + "%'", Usuario.class);
 
-        return query.getResultList();
+        List<?> results = query.getResultList();
+
+        return results.stream()
+                .filter(Usuario.class::isInstance)
+                .map(Usuario.class::cast)
+                .toList();
     }
 
     public Usuario buscarPorEmail(String email) {
@@ -45,24 +53,27 @@ public class UsuarioRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    public Usuario login(UsuarioDto usuario) {
+    public Usuario login(UsuarioDto usuarioDto) {
         var config = SecurityRuntimeConfig.getInstance();
         List<Usuario> list;
         if (config.isSqlInjectionPreventionEnabled()) {
             var jpqlquery = "select u from Usuario u where u.email = :email and u.senha = :senha";
             list = entityManager.createQuery(jpqlquery, Usuario.class)
-                    .setParameter("email", usuario.getEmail())
-                    .setParameter("senha", StringHelper.md5(usuario.getSenha()))
+                    .setParameter("email", usuarioDto.getEmail())
+                    .setParameter("senha", StringHelper.md5(usuarioDto.getSenha()))
                     .getResultList();
         } else {
-            var jpqlquery = String.format("select u from Usuario u where u.email = '%s' and u.senha = '%s'", usuario.getEmail(), StringHelper.md5(usuario.getSenha()));
+            var jpqlquery = String.format("select u from Usuario u where u.email = '%s' and u.senha = '%s'",
+                    usuarioDto.getEmail(), StringHelper.md5(usuarioDto.getSenha()));
             list = entityManager.createQuery(jpqlquery, Usuario.class).getResultList();
         }
 
-        if (list.isEmpty())
-            return null;
-        else
-            return list.get(0);
+        Usuario usuario = null;
+
+        if (!list.isEmpty())
+            usuario = list.get(0);
+
+        return usuario;
     }
 
     @Transactional

@@ -41,7 +41,7 @@ public class TokenOpacoHelper {
 
         var sessao = sessaoRepository.findByToken(token);
 
-        if (!sessao.isAtivo() || sessao.getExpiraEm().compareTo(new Date()) < 0)
+        if (sessao == null || !sessao.isAtivo() || sessao.getExpiraEm().compareTo(new Date()) < 0)
             return null;
 
         return sessao;
@@ -60,6 +60,9 @@ public class TokenOpacoHelper {
             return;
 
         var sessao = sessaoRepository.findByToken(token);
+
+        if (sessao == null)
+            throw new RuntimeException("Sessão não encontrada: Token{" + token + "}");
 
         sessao.setAtivo(false);
         sessaoRepository.save(sessao);

@@ -1,5 +1,6 @@
 package br.com.dvsn.helpers;
 
+import br.com.dvsn.enums.CookieSameSite;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,21 +17,25 @@ public final class CookieHelper {
         cookie.setHttpOnly(config.isCookieHttpOnly());
         cookie.setSecure(config.isCookieSecure());
 
-        if(!StringHelper.isNullOrEmpty(config.getCookieDomain()))
+        var cookieSameSite = config.getCookieSameSite();
+        if (cookieSameSite != null && cookieSameSite != CookieSameSite.Empty)
+            cookie.setAttribute("SameSite", config.getCookieSameSite().toString());
+
+        if (!StringHelper.isNullOrEmpty(config.getCookieDomain()))
             cookie.setDomain(config.getCookieDomain());
 
         response.addCookie(cookie);
     }
 
-    public static Cookie getCookie(HttpServletRequest request, String chave){
+    public static Cookie getCookie(HttpServletRequest request, String chave) {
 
         var cookies = request.getCookies();
 
-        if(cookies == null)
+        if (cookies == null)
             return null;
 
         for (var c : cookies) {
-            if(c.getName().equals(chave))
+            if (c.getName().equals(chave))
                 return c;
         }
         return null;
@@ -46,7 +51,7 @@ public final class CookieHelper {
         cookie.setHttpOnly(config.isCookieHttpOnly());
         cookie.setSecure(config.isCookieSecure());
 
-        if(!StringHelper.isNullOrEmpty(config.getCookieDomain()))
+        if (!StringHelper.isNullOrEmpty(config.getCookieDomain()))
             cookie.setDomain(config.getCookieDomain());
 
         response.addCookie(cookie);

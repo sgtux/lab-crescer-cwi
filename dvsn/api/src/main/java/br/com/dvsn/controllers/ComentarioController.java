@@ -24,7 +24,7 @@ public class ComentarioController extends BaseController {
     private PostRepository postRepository;
 
     @PostMapping("comentario")
-    public ResponseEntity criarComentario(HttpServletRequest request, @RequestBody ComentarioDto comentarioDto) {
+    public ResponseEntity<?> criarComentario(HttpServletRequest request, @RequestBody ComentarioDto comentarioDto) {
 
         try {
             var postId = comentarioDto.getPostId();
@@ -64,7 +64,7 @@ public class ComentarioController extends BaseController {
     }
 
     @DeleteMapping("comentario/{id}")
-    public ResponseEntity removerComentario(@PathVariable long id) {
+    public ResponseEntity<?> removerComentario(@PathVariable long id) {
 
         try {
             if (!comentarioRepository.existsById(id))
