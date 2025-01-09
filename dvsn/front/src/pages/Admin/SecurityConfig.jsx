@@ -3,24 +3,28 @@ import { useDispatch } from 'react-redux'
 
 import { adminService } from '../../services'
 
-import { TextInput, SaveButton, ResetButton } from '../../components'
+import { TextInput, SaveButton, ResetButton, ErrorMessage, SuccessMessage } from '../../components'
 import { Container, FieldName, GroupField, FieldBox, Hr } from './styles'
 
 import { userChanged, securityConfigChanged } from '../../store/actions'
 
 export function SecurityConfig() {
 
+    const [errorMessage, setErrorMessage] = useState('')
+    const [successMessage, setSuccessMessage] = useState('')
     const [xssPreventionEnabled, setXssPreventionEnabled] = useState(false)
     const [xssStoredPreventionEnabled, setXssStoredPreventionEnabled] = useState(false)
     const [sqlInjectionPreventionEnabled, setSqlInjectionPreventionEnabled] = useState(false)
     const [cookieHttpOnly, setCookieHttpOnly] = useState(false)
     const [cookieSecure, setCookieSecure] = useState(false)
     const [cookieDomain, setCookieDomain] = useState('')
+    const [cookieSameSite, setCookieSameSite] = useState('Empty')
     const [sessionMinutes, setSessionMinutes] = useState(false)
     const [tipoAutenticacao, setTipoAutenticacao] = useState('CookieBase64')
     const [xFrameOptionsHeader, setXFrameOptionsHeader] = useState('Empty')
     const [urlIframe, setUrlIframe] = useState(window.location.href)
     const [contentSecurityPolicy, setContentSecurityPolicy] = useState('')
+    const [cors, setCors] = useState('')
 
     const dispatch = useDispatch()
 
@@ -33,11 +37,16 @@ export function SecurityConfig() {
             setCookieHttpOnly(res.cookieHttpOnly)
             setCookieSecure(res.cookieSecure)
             setCookieDomain(res.cookieDomain || '')
+            setCookieSameSite(res.cookieSameSite || '')
             setSessionMinutes(res.sessionMinutes)
             setTipoAutenticacao(res.tipoAutenticacao)
             setXFrameOptionsHeader(res.xFrameOptionsHeader)
-            setContentSecurityPolicy(res.contentSecurityPolicy)
+            setContentSecurityPolicy(res.contentSecurityPolicy || '')
+            setCors(res.cors || '')
             dispatch(securityConfigChanged(res))
+
+            setErrorMessage('')
+            setSuccessMessage('')
         } catch (err) {
             if (err.toJSON().status === 401) {
                 dispatch(userChanged(null))
@@ -47,21 +56,38 @@ export function SecurityConfig() {
 
     useEffect(() => refresh(), [refresh])
 
-    function save() {
-        adminService.updateSecurityConfig({
-            xssPreventionEnabled,
-            xssStoredPreventionEnabled,
-            sqlInjectionPreventionEnabled,
-            cookieHttpOnly,
-            cookieSecure,
-            cookieDomain,
-            sessionMinutes: Number(sessionMinutes || 0),
-            tipoAutenticacao,
-            xFrameOptionsHeader,
-            contentSecurityPolicy
-        })
-            .then(() => refresh())
-            .catch(err => console.log(err))
+    async function save() {
+
+        try {
+            const res = await adminService.updateSecurityConfig({
+                xssPreventionEnabled,
+                xssStoredPreventionEnabled,
+                sqlInjectionPreventionEnabled,
+                cookieHttpOnly,
+                cookieSecure,
+                cookieDomain,
+                cookieSameSite,
+                sessionMinutes: Number(sessionMinutes || 0),
+                tipoAutenticacao,
+                xFrameOptionsHeader,
+                contentSecurityPolicy,
+                cors
+            })
+            if (res.status === 200) {
+                setSuccessMessage('Salvo com sucesso.')
+                setTimeout(() => refresh(), 1000)
+            } else if (res.status === 400) {
+                const json = await res.json()
+                setErrorMessage(json.erro)
+                console.log(json.erro)
+            } else {
+                setErrorMessage('Não foi possível salvar.')
+            }
+        } catch (err) {
+            if (typeof (err.toJSON) === 'function' && err.toJSON().status === 400) {
+                setErrorMessage(err.response.data.erro)
+            }
+        }
     }
 
     function reset() {
@@ -101,6 +127,16 @@ export function SecurityConfig() {
                     <FieldName>Domínio:</FieldName>
                     <TextInput style={{ width: 200 }} value={cookieDomain} onChange={e => setCookieDomain(e.target.value)} />
                 </FieldBox>
+                <FieldBox>
+                    <FieldName>Same Site:</FieldName>
+                    <select value={cookieSameSite} onChange={e => setCookieSameSite(e.target.value)}>
+                        <option value="Empty">Vazio</option>
+                        <option value="None">None</option>
+                        <option value="Lax">Lax</option>
+                        <option value="Strict">Strict</option>
+                    </select>
+                </FieldBox>
+                {cookieSameSite !== 'Empty' && !cookieSecure && <ErrorMessage>Requer o atributo Secure</ErrorMessage>}
             </GroupField>
             <GroupField>
                 <legend>Autenticação</legend>
@@ -125,6 +161,11 @@ export function SecurityConfig() {
                 </FieldBox>
                 <Hr />
                 <FieldBox>
+                    <FieldName>Cross Origin Resource Sharing (CORS):</FieldName>
+                    <TextInput style={{ width: 500, marginTop: 6 }} value={cors} onChange={e => setCors(e.target.value)} />
+                </FieldBox>
+                <Hr />
+                <FieldBox>
                     <FieldName>X-Frame-Options:</FieldName>
                     <select value={xFrameOptionsHeader} onChange={e => setXFrameOptionsHeader(e.target.value)}>
                         <option value="Empty">Vazio</option>
@@ -132,17 +173,20 @@ export function SecurityConfig() {
                         <option value="Deny">Deny</option>
                     </select>
                 </FieldBox>
+                <br />
+            </GroupField>
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+            {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+            <ResetButton onClick={() => reset()}>Restaurar</ResetButton>
+            <SaveButton onClick={() => save()}>Salvar</SaveButton>
+            <GroupField>
+                <legend>IFrame</legend>
                 <FieldBox>
                     <FieldName>Url Iframe:</FieldName>
                     <TextInput style={{ width: 300 }} value={urlIframe} onChange={e => setUrlIframe(e.target.value)} />
                 </FieldBox>
-                <FieldBox>
-                    <iframe src={urlIframe} title='TesteIframeOptions' width={300} height={200}></iframe>
-                </FieldBox>
+                <iframe src={urlIframe} title='TesteIframeOptions' style={{ width: 600, height: 400, marginTop: 30 }}></iframe>
             </GroupField>
-            <br /><br />
-            <ResetButton onClick={() => reset()}>Restaurar</ResetButton>
-            <SaveButton onClick={() => save()}>Salvar</SaveButton>
         </Container>
     )
 }

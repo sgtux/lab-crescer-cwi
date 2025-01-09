@@ -1,6 +1,7 @@
 package br.com.dvsn.security;
 
 import br.com.dvsn.dtos.SecurityRuntimeConfigDto;
+import br.com.dvsn.enums.CookieSameSite;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.enums.XFrameOptionsHeader;
 
@@ -13,6 +14,8 @@ public final class SecurityRuntimeConfig {
     private boolean cookieSecure;
 
     private String cookieDomain;
+
+    private CookieSameSite cookieSameSite;
 
     private int sessionMinutes;
 
@@ -28,10 +31,13 @@ public final class SecurityRuntimeConfig {
 
     private String contentSecurityPolicy;
 
+    private String cors;
+
     private SecurityRuntimeConfig() {
         sessionMinutes = 30;
         tipoAutenticacao = TipoAutenticacao.CookieBase64;
         xFrameOptionsHeader = XFrameOptionsHeader.Empty;
+        cookieSameSite = CookieSameSite.Empty;
     }
 
     public static SecurityRuntimeConfig getInstance() {
@@ -55,6 +61,8 @@ public final class SecurityRuntimeConfig {
         setXssStoredPreventionEnabled(config.isXssStoredPreventionEnabled());
         setxFrameOptionsHeader(config.getxFrameOptionsHeader());
         setContentSecurityPolicy(config.getContentSecurityPolicy());
+        setCookieSameSite(config.getCookieSameSite());
+        setCors(config.getCors());
     }
 
     public boolean isCookieHttpOnly() {
@@ -79,6 +87,14 @@ public final class SecurityRuntimeConfig {
 
     public void setCookieDomain(String cookieDomain) {
         this.cookieDomain = cookieDomain;
+    }
+
+    public CookieSameSite getCookieSameSite() {
+        return cookieSameSite;
+    }
+
+    public void setCookieSameSite(CookieSameSite cookieSameSite) {
+        this.cookieSameSite = cookieSameSite;
     }
 
     public int getSessionMinutes() {
@@ -135,5 +151,13 @@ public final class SecurityRuntimeConfig {
 
     public void setContentSecurityPolicy(String contentSecurityPolicy) {
         this.contentSecurityPolicy = contentSecurityPolicy;
+    }
+
+    public String getCors() {
+        return this.cors;
+    }
+
+    public void setCors(String cors) {
+        this.cors = cors;
     }
 }

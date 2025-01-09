@@ -1,5 +1,6 @@
 package br.com.dvsn.helpers;
 
+import br.com.dvsn.enums.CookieSameSite;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,10 @@ public final class CookieHelper {
         cookie.setPath("/");
         cookie.setHttpOnly(config.isCookieHttpOnly());
         cookie.setSecure(config.isCookieSecure());
+
+        var cookieSameSite = config.getCookieSameSite();
+        if (cookieSameSite != null && cookieSameSite != CookieSameSite.Empty)
+            cookie.setAttribute("SameSite", config.getCookieSameSite().toString());
 
         if (!StringHelper.isNullOrEmpty(config.getCookieDomain()))
             cookie.setDomain(config.getCookieDomain());

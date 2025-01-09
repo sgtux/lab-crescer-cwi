@@ -23,6 +23,7 @@ public class HttpResponseHeaderFilter extends OncePerRequestFilter {
 
         xFrameOptionsHeader(config, response);
         contentSecurityPolicy(config, response);
+        cors(request, config, response);
 
         filterChain.doFilter(request, response);
     }
@@ -41,5 +42,15 @@ public class HttpResponseHeaderFilter extends OncePerRequestFilter {
         var contentSecurityPolicy = config.getContentSecurityPolicy();
         if (!StringHelper.isNullOrEmpty(contentSecurityPolicy))
             response.addHeader("Content-Security-Policy", contentSecurityPolicy);
+    }
+
+    private void cors(HttpServletRequest request, SecurityRuntimeConfig config, HttpServletResponse response) {
+        var cors = config.getCors();
+        if (!StringHelper.isNullOrEmpty(cors)) {
+            String origin = cors.trim().equals("*") ? request.getHeader("Origin") : cors;
+            response.setHeader("Access-Control-Allow-Origin", origin);
+            response.addHeader("Access-Control-Allow-Credentials", "true");
+            response.addHeader("Access-Control-Allow-Methods", "GET");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package br.com.dvsn.dtos;
 
+import br.com.dvsn.enums.CookieSameSite;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.enums.XFrameOptionsHeader;
 import br.com.dvsn.security.SecurityRuntimeConfig;
@@ -11,6 +12,8 @@ public class SecurityRuntimeConfigDto {
     private boolean cookieSecure;
 
     private String cookieDomain;
+
+    private CookieSameSite cookieSameSite;
 
     private int sessionMinutes;
 
@@ -26,6 +29,8 @@ public class SecurityRuntimeConfigDto {
 
     private String contentSecurityPolicy;
 
+    private String cors;
+
     public SecurityRuntimeConfigDto() {
     }
 
@@ -33,6 +38,7 @@ public class SecurityRuntimeConfigDto {
         cookieHttpOnly = config.isCookieHttpOnly();
         cookieSecure = config.isCookieSecure();
         cookieDomain = config.getCookieDomain();
+        cookieSameSite = config.getCookieSameSite();
         sessionMinutes = config.getSessionMinutes();
         tipoAutenticacao = config.getTipoAutenticacao();
         xssPreventionEnabled = config.isXssPreventionEnabled();
@@ -40,6 +46,7 @@ public class SecurityRuntimeConfigDto {
         sqlInjectionPreventionEnabled = config.isSqlInjectionPreventionEnabled();
         xFrameOptionsHeader = config.getxFrameOptionsHeader();
         contentSecurityPolicy = config.getContentSecurityPolicy();
+        cors = config.getCors();
     }
 
     public boolean isCookieHttpOnly() {
@@ -64,6 +71,14 @@ public class SecurityRuntimeConfigDto {
 
     public void setCookieDomain(String cookieDomain) {
         this.cookieDomain = cookieDomain;
+    }
+
+    public CookieSameSite getCookieSameSite() {
+        return this.cookieSameSite;
+    }
+
+    public void setCookieSameSite(CookieSameSite cookieSameSite) {
+        this.cookieSameSite = cookieSameSite;
     }
 
     public int getSessionMinutes() {
@@ -120,5 +135,13 @@ public class SecurityRuntimeConfigDto {
 
     public void setContentSecurityPolicy(String contentSecurityPolicy) {
         this.contentSecurityPolicy = contentSecurityPolicy;
+    }
+
+    public String getCors() {
+        return this.cors;
+    }
+
+    public void setCors(String cors) {
+        this.cors = cors;
     }
 }
