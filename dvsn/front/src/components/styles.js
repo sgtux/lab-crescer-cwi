@@ -63,7 +63,6 @@ export const SuccessMessage = styled.div`
     margin-top:10px;
 `
 
-
 export const CustomButton = styled.button`
     background-color: #1877f2;
     width: 100%;
