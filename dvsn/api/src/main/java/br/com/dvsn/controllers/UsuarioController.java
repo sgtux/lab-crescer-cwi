@@ -4,7 +4,13 @@ import br.com.dvsn.dtos.UsuarioDto;
 import br.com.dvsn.dtos.UsuarioExibicaoDto;
 import br.com.dvsn.helpers.StringHelper;
 import br.com.dvsn.repository.PostRepository;
+import br.com.dvsn.security.CsrfToken;
+import br.com.dvsn.security.CsrfTokenCache;
+import br.com.dvsn.security.SecurityRuntimeConfig;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,9 +103,23 @@ public class UsuarioController extends BaseController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @GetMapping("usuario/alterar-senha-csrf-token")
+    public ResponseEntity<?> obterTokenCsrf(HttpServletRequest request, HttpServletResponse response) {
+        var idUsuario = obterUsuarioLogado(request).getId();
+
+        var token = new CsrfToken(idUsuario);
+        CsrfTokenCache.addToken(token);
+        var cookie = new Cookie("_csrf", token.getToken());
+        cookie.setMaxAge(SecurityRuntimeConfig.getInstance().getSessionMinutes() * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("usuario/alterar-senha")
     public ResponseEntity<?> alterarSenha(HttpServletRequest request, @RequestPart(required = false) String senha,
-            @RequestPart(required = false) String confirmacao) {
+            @RequestPart(required = false) String confirmacao, @RequestPart(required = false) String token) {
         try {
             if (StringHelper.isNullOrEmpty(senha)) {
                 return badRequest("Informe a nova senha.");
@@ -110,6 +130,16 @@ public class UsuarioController extends BaseController {
             }
 
             var idUsuario = obterUsuarioLogado(request).getId();
+
+            if (SecurityRuntimeConfig.getInstance().isCsrfTokenEnabled()) {
+
+                if (StringHelper.isNullOrEmpty(token))
+                    return badRequest("Informe o csrf token.");
+
+                var tokenCache = CsrfTokenCache.getToken(token);
+                if (tokenCache == null || tokenCache.getUserId() != idUsuario)
+                    return badRequest("Token informado é inválido.");
+            }
 
             usuarioRepository.alterarSenha(idUsuario, senha);
 

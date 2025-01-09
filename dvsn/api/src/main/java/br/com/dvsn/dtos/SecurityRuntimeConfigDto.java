@@ -25,6 +25,8 @@ public class SecurityRuntimeConfigDto {
 
     private boolean sqlInjectionPreventionEnabled;
 
+    private boolean csrfTokenEnabled;
+
     private XFrameOptionsHeader xFrameOptionsHeader;
 
     private String contentSecurityPolicy;
@@ -44,6 +46,7 @@ public class SecurityRuntimeConfigDto {
         xssPreventionEnabled = config.isXssPreventionEnabled();
         xssStoredPreventionEnabled = config.isXssStoredPreventionEnabled();
         sqlInjectionPreventionEnabled = config.isSqlInjectionPreventionEnabled();
+        csrfTokenEnabled = config.isCsrfTokenEnabled();
         xFrameOptionsHeader = config.getxFrameOptionsHeader();
         contentSecurityPolicy = config.getContentSecurityPolicy();
         cors = config.getCors();
@@ -119,6 +122,14 @@ public class SecurityRuntimeConfigDto {
 
     public void setSqlInjectionPreventionEnabled(boolean sqlInjectionPreventionEnabled) {
         this.sqlInjectionPreventionEnabled = sqlInjectionPreventionEnabled;
+    }
+
+    public boolean isCsrfTokenEnabled() {
+        return this.csrfTokenEnabled;
+    }
+
+    public void setCsrfTokenEnabled(boolean csrfTokenEnabled) {
+        this.csrfTokenEnabled = csrfTokenEnabled;
     }
 
     public XFrameOptionsHeader getxFrameOptionsHeader() {

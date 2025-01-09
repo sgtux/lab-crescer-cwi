@@ -1,6 +1,5 @@
 package br.com.dvsn.controllers;
 
-import br.com.dvsn.dtos.ResponseErrorDto;
 import br.com.dvsn.dtos.UsuarioLogadoDto;
 import br.com.dvsn.enums.TipoAutenticacao;
 import br.com.dvsn.helpers.*;
@@ -8,8 +7,13 @@ import br.com.dvsn.repository.SessaoRepository;
 import br.com.dvsn.repository.UsuarioRepository;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public class BaseController {
 
@@ -57,24 +61,30 @@ public class BaseController {
         return usuario.getFuncao() == 1;
     }
 
-    protected ResponseErrorDto unauthorized(String message) {
-        return new ResponseErrorDto(message, HttpStatus.UNAUTHORIZED);
+    protected ResponseEntity<?> unauthorized(String message) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse(message));
     }
 
-    protected ResponseErrorDto forbidden() {
-        return new ResponseErrorDto("Acesso proibido.", HttpStatus.FORBIDDEN);
+    protected ResponseEntity<?> forbidden() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse("Acesso proibido."));
     }
 
-    protected ResponseErrorDto badRequest(String erro) {
-        return new ResponseErrorDto(erro, HttpStatus.BAD_REQUEST);
+    protected ResponseEntity<?> badRequest(String erro) {
+        return ResponseEntity.badRequest().body(errorResponse(erro));
     }
 
-    protected ResponseErrorDto notFound(String erro) {
-        return new ResponseErrorDto(erro, HttpStatus.NOT_FOUND);
+    protected ResponseEntity<?> notFound(String erro) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse(erro));
     }
 
-    protected ResponseErrorDto internalServerError(Exception exception) {
+    protected ResponseEntity<?> internalServerError(Exception exception) {
         System.err.println(exception);
-        return new ResponseErrorDto("Erro interno.", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse("Erro interno."));
+    }
+
+    private Object errorResponse(String erro) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("erro", erro);
+        return errorResponse;
     }
 }
