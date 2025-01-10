@@ -41,6 +41,22 @@ CREATE TABLE sessao (
     usuario_id INT CONSTRAINT fk_comentario_usuario REFERENCES usuario (id)
 );
 
+CREATE TABLE csp_report (
+    id SERIAL PRIMARY KEY,
+    blocked_uri VARCHAR(200),
+    column_number INT,
+    disposition VARCHAR(200),
+    document_uri VARCHAR(200),    
+    effective_directive VARCHAR(200),
+    line_number INT,
+    original_policy VARCHAR(200),
+    referrer VARCHAR(200),
+    source_file VARCHAR(200),
+    status_code INT,
+    violated_directive VARCHAR(200),
+    date TIMESTAMP
+);
+
 INSERT INTO usuario (nome, sobrenome, email, senha, foto, funcao, criado_em, atualizado_em) VALUES
 ('Janis', 'Joplin', 'janis@mail.com', '46f94c8de14fb36680850768ff1b7f2a', '4b0a5bindex.jpg', 2, '2021-04-18 14:49:16.698882', '2021-04-26 14:49:26.435425'),
 ('Jimi', 'Hendrix', 'jimi@mail.com', '061fba5bdfc076bb7362616668de87c8', '4cc947jimiprofile.jpg', 2, '2021-04-20 14:29:16.749603', '2021-04-26 14:45:12.258211'),

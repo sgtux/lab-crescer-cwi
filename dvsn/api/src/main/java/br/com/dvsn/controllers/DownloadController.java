@@ -35,7 +35,7 @@ public class DownloadController extends BaseController {
 
             File file = new File(path);
             if (!file.exists())
-                return notFound(fileName);
+                return notFound("Arquivo " + fileName + " não encontrado.");
 
             final byte[] fileBytes = Files.readAllBytes(Paths.get(path));
 

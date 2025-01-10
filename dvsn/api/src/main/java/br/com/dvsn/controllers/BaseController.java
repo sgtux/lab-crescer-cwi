@@ -74,7 +74,7 @@ public class BaseController {
     }
 
     protected ResponseEntity<?> notFound(String erro) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse(erro));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse(erro));
     }
 
     protected ResponseEntity<?> internalServerError(Exception exception) {
