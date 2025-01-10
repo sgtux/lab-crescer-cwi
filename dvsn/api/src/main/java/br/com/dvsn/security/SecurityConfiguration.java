@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/auth/**",
                         "/",
                         "/favicon.ico",
+                        "/csp/**",
                         "/index.html",
                         "/static/**",
                         "/fontawesome/**",
