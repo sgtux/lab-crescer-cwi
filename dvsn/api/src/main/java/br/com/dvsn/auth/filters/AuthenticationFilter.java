@@ -13,6 +13,7 @@ public abstract class AuthenticationFilter extends OncePerRequestFilter {
     protected boolean isFreeEndpoint(HttpServletRequest request) {
         String endpoint = request.getRequestURI().toString();
         return endpoint.equals("/favicon.ico")
+                || endpoint.startsWith("/csp/")
                 || endpoint.equals("/index.html")
                 || endpoint.equals("/")
                 || endpoint.startsWith("/auth/")

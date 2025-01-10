@@ -52,6 +52,26 @@ frame-src www.crescer.lab
 frame-src localhost:8080
 ```
 
+Carregar imagens apenas de fontes confiáveis.
+```
+Content-Security-Policy: img-src 'self' https://www.crescer.lab;form-action 'self';
+```
+
+Garante que apenas recursos carregados via HTTPS sejam permitidos.
+```
+Content-Security-Policy: upgrade-insecure-requests
+```
+
+Salvar report:
+```
+Content-Security-Policy: report-uri /csp/report
+```
+
+Como ajuda: Define uma política padrão para todas as categorias de recursos, caso não sejam especificadas explicitamente.
+```
+Content-Security-Policy: default-src 'self'
+```
+
 - **X-Frame-Options**
     - **Deny:** Evita que o site seja carregado dentro de um iframe.
     - **Same Origin:** Permite que o site seja carregado apenas dentro de um iframe do próprio site (mesma origem).
