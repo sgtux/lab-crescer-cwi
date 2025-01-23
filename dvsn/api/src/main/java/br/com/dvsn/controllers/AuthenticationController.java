@@ -70,6 +70,8 @@ public class AuthenticationController extends BaseController {
             if (tipoAutenticacao == TipoAutenticacao.CookieBase64) {
                 String jsonData = StringHelper.toJson(usuarioLogadoDto);
                 String cookieValue = StringHelper.toBase64(jsonData);
+                if (SecurityRuntimeConfig.getInstance().isCookieBase64SignatureEnabled())
+                    cookieValue = CookieHelper.assinarBase64Token(cookieValue);
                 CookieHelper.AddCookie(response, Constantes.AUTH_COOKIE_NAME, cookieValue);
             } else if (tipoAutenticacao == TipoAutenticacao.Jwt) {
                 var token = JwtHelper.criarToken(usuario);

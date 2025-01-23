@@ -33,6 +33,8 @@ public class SecurityRuntimeConfigDto {
 
     private String cors;
 
+    private boolean cookieBase64SignatureEnabled;
+
     public SecurityRuntimeConfigDto() {
     }
 
@@ -50,6 +52,7 @@ public class SecurityRuntimeConfigDto {
         xFrameOptionsHeader = config.getxFrameOptionsHeader();
         contentSecurityPolicy = config.getContentSecurityPolicy();
         cors = config.getCors();
+        cookieBase64SignatureEnabled = config.isCookieBase64SignatureEnabled();
     }
 
     public boolean isCookieHttpOnly() {
@@ -154,5 +157,13 @@ public class SecurityRuntimeConfigDto {
 
     public void setCors(String cors) {
         this.cors = cors;
+    }
+
+    public boolean isCookieBase64SignatureEnabled() {
+        return this.cookieBase64SignatureEnabled;
+    }
+
+    public void setCookieBase64SignatureEnabled(boolean cookieBase64SignatureEnabled) {
+        this.cookieBase64SignatureEnabled = cookieBase64SignatureEnabled;
     }
 }

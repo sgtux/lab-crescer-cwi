@@ -35,6 +35,8 @@ public class BaseController {
             var cookie = CookieHelper.getCookieValue(request, Constantes.AUTH_COOKIE_NAME);
 
             if (cookie != null) {
+                if(SecurityRuntimeConfig.getInstance().isCookieBase64SignatureEnabled())
+                cookie = cookie.split("\\.")[0];
                 var userJson = StringHelper.fromBase64(cookie);
                 var usuarioLogado = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
 

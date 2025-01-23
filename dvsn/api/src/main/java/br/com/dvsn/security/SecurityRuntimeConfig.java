@@ -35,6 +35,8 @@ public final class SecurityRuntimeConfig {
 
     private String cors;
 
+    private boolean cookieBase64SignatureEnabled;
+
     private SecurityRuntimeConfig() {
         sessionMinutes = 30;
         tipoAutenticacao = TipoAutenticacao.CookieBase64;
@@ -66,6 +68,7 @@ public final class SecurityRuntimeConfig {
         setContentSecurityPolicy(config.getContentSecurityPolicy());
         setCookieSameSite(config.getCookieSameSite());
         setCors(config.getCors());
+        setCookieBase64SignatureEnabled(config.isCookieBase64SignatureEnabled());
     }
 
     public boolean isCookieHttpOnly() {
@@ -170,5 +173,13 @@ public final class SecurityRuntimeConfig {
 
     public void setCors(String cors) {
         this.cors = cors;
+    }
+
+    public boolean isCookieBase64SignatureEnabled() {
+        return this.cookieBase64SignatureEnabled;
+    }
+
+    public void setCookieBase64SignatureEnabled(boolean cookieBase64SignatureEnabled) {
+        this.cookieBase64SignatureEnabled = cookieBase64SignatureEnabled;
     }
 }
