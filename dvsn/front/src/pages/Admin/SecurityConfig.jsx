@@ -26,6 +26,7 @@ export function SecurityConfig() {
     const [urlIframe, setUrlIframe] = useState(window.location.href)
     const [contentSecurityPolicy, setContentSecurityPolicy] = useState('')
     const [cors, setCors] = useState('')
+    const [cookieBase64SignatureEnabled, setCookieBase64SignatureEnabled] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -45,6 +46,7 @@ export function SecurityConfig() {
             setXFrameOptionsHeader(res.xFrameOptionsHeader)
             setContentSecurityPolicy(res.contentSecurityPolicy || '')
             setCors(res.cors || '')
+            setCookieBase64SignatureEnabled(res.cookieBase64SignatureEnabled)
             dispatch(securityConfigChanged(res))
 
             setErrorMessage('')
@@ -74,7 +76,8 @@ export function SecurityConfig() {
                 tipoAutenticacao,
                 xFrameOptionsHeader,
                 contentSecurityPolicy,
-                cors
+                cors,
+                cookieBase64SignatureEnabled
             })
             if (res.status === 200) {
                 setSuccessMessage('Salvo com sucesso.')
@@ -159,6 +162,12 @@ export function SecurityConfig() {
                         <option value="TokenOpaco">Token Opaco</option>
                     </select>
                 </FieldBox>
+                {tipoAutenticacao === 'CookieBase64' &&
+                    <FieldBox>
+                        <FieldName>Utilizar Assinatura no Token:</FieldName>
+                        <input type="checkbox" checked={cookieBase64SignatureEnabled} onChange={e => setCookieBase64SignatureEnabled(e.target.checked)} />
+                    </FieldBox>
+                }
             </GroupField>
             <GroupField>
                 <legend>HTTP Response Headers</legend>

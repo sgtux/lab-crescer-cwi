@@ -28,4 +28,11 @@ public abstract class AuthenticationFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.getWriter().write("{\"error\": \" Autenticação é necessária (" + tipoAutenticacao + ") \"}");
     }
+
+    protected void handleUnauthorized(HttpServletResponse response, String message)
+            throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
+    }
 }

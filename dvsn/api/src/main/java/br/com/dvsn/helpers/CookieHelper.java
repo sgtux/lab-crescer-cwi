@@ -1,6 +1,8 @@
 package br.com.dvsn.helpers;
 
+import br.com.dvsn.dtos.UsuarioLogadoDto;
 import br.com.dvsn.enums.CookieSameSite;
+import br.com.dvsn.security.AppConfig;
 import br.com.dvsn.security.SecurityRuntimeConfig;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,5 +62,20 @@ public final class CookieHelper {
     public static String getCookieValue(HttpServletRequest request, String chave) {
         var cookie = getCookie(request, chave);
         return cookie == null ? null : cookie.getValue();
+    }
+
+    public static String assinarBase64Token(String base64Token){
+        var apiKey = AppConfig.getCookieBase64ApiKey();
+        var signatureHash = StringHelper.md5(base64Token + apiKey);
+        return base64Token + "." + signatureHash;
+    }
+
+    public static UsuarioLogadoDto verificarAssinaturaBase64Token(String base64Token, String signature) {
+        var apiKey = AppConfig.getCookieBase64ApiKey();
+        var signatureHash = StringHelper.md5(base64Token + apiKey);
+        if (!signatureHash.equals(signature))
+            return null;
+        var userJson = StringHelper.fromBase64(base64Token);
+        return StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
     }
 }

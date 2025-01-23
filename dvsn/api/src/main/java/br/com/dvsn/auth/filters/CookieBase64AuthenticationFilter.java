@@ -45,9 +45,30 @@ public class CookieBase64AuthenticationFilter extends AuthenticationFilter {
             return;
         }
 
-        var userJson = StringHelper.fromBase64(cookie);
-        var usuario = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
-        var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuario), usuario.getEmail(),
+        UsuarioLogadoDto usuarioLogado = null;
+        if (SecurityRuntimeConfig.getInstance().isCookieBase64SignatureEnabled()) {
+            var arr = cookie.split("\\.");
+            if (arr.length != 2) {
+                handleUnauthorized(response, "Token com estrutura inválida.");
+                return;
+            }
+            usuarioLogado = CookieHelper.verificarAssinaturaBase64Token(arr[0], arr[1]);
+            if (usuarioLogado == null) {
+                handleUnauthorized(response, "Assinatura do token está incorreta.");
+                return;
+            }
+        }
+
+        if (usuarioLogado == null) {
+            if (cookie.contains(".")) {
+                handleUnauthorized(response, "Token com estrutura inválida.");
+                return;
+            }
+            var userJson = StringHelper.fromBase64(cookie);
+            usuarioLogado = StringHelper.fromJson(userJson, UsuarioLogadoDto.class);
+        }
+        var authentication = new UsernamePasswordAuthenticationToken(new UsuarioDetails(usuarioLogado),
+                usuarioLogado.getEmail(),
                 new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
